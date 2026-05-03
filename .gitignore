@@ -1,0 +1,31 @@
+# Dependencies
+node_modules/
+backend/node_modules/
+mobile-app/node_modules/
+
+# Environment
+.env
+backend/.env
+mobile-app/.env
+
+# Uploads
+backend/uploads/
+
+# Expo
+.expo/
+dist/
+web-build/
+
+# Logs
+*.log
+
+# IDE
+.idea/
+.vscode/
+
+# Temp
+scratch/
+
+# OS
+.DS_Store
+Thumbs.db
