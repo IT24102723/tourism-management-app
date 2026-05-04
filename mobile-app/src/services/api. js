@@ -1,0 +1,70 @@
+import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Platform } from 'react-native';
+
+// Determine API base URL based on platform
+const getBaseURL = () => {
+  // For testing on physical devices, update this IP to your machine's IP
+  // Run: ipconfig (Windows) or ifconfig (Mac/ Linux) to find your local IP
+  const LOCAL_ MACHINE_IP = '192.168.x.x'; // ← Change this to your machine's IP for physical device testing
+
+  if (Platform.OS === 'android') {
+    // Android emulator uses 10.0.2.2 to reach host machine
+    return 'http://10.0.2.2:5051/api/v1';
+  } else if (Platform.OS === 'ios') {
+    // iOS simulator can use localhost to reach host machine
+    // For physical iOS device: use LOCAL_MACHINE_IP above
+    return 'http://localhost:5051/api/v1';
+  } else {
+    // Web/other platform
+    return 'http://localhost:5051/api/v1';
+  }
+};
+
+const API = axios.create({
+  baseURL: getBaseURL(),
+  timeout: 15000,
+  validateStatus: (status) => status >= 200 && status < 500,
+});
+
+API.interceptors.request.use(async (config) => {
+  try {
+    const token = await AsyncStorage.getItem('tss_ access_token');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+  } catch (e) {
+    console. warn('⚠️ Token retrieval error:', e.message);
+  }
+  console.log(`🚀 [${config.method?.toUpperCase()}] ${config.baseURL}${config.url}`);
+  return config;
+});
+
+API.interceptors.response.use(
+  (response) => {
+    if (response.status < 400) {
+      console.log(`✅ [${response.status}] Success`);
+    } else {
+      console.warn(`⚠️ [${response.status}] ${response.data?.message || 'Error'}`);
+    }
+    return response;
+  },
+  (error) => {
+    const message = error.response?.data?.message || error.message || 'Connection Error';
+    const status = error.response?.status;
+
+    if (status === 401) {
+      AsyncStorage.removeItem('tss_ access_token');
+      console.warn('🔴 [401] Unauthorized - token removed');
+    } else if (status === 500) {
+      console.error('🔴 [500] Server Error');
+    } else if (!error.response) {
+      console.error(`🔴 Network Error: Cannot reach ${API.defaults.baseURL}`);
+    }
+
+    console.error(`❌ API Error: ${message}`);
+    return Promise.reject(error);
+  }
+);
+
+export default API;
