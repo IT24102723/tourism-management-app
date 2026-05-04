@@ -5,7 +5,7 @@ import { Platform } from 'react-native';
  * Change LOCAL_MACHINE_IP to your current IPv4 address (run 'ipconfig' on Windows).
  * This is required for physical devices and Expo Go to reach your local backend.
  */
-export const LOCAL_MACHINE_IP = '192.168.1.2';
+export const LOCAL_MACHINE_IP = '172.20.10.3';
 
 export const API_PORT = '5051';
 export const API_VERSION = 'v1';
