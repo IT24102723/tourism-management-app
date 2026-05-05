@@ -7,6 +7,8 @@ const TransportVehicle = mongoose.model('TransportVehicle', makeSchema({
   registration_number: { type: String, index: true, unique: true, sparse: true },
   capacity: { type: Number },
   status: { type: String, default: 'Available' },
+  price_per_day: { type: Number, default: 0 },
+  price_per_km: { type: Number, default: 0 },
 }), 'transport_vehicles');
 
 module.exports = TransportVehicle;

@@ -272,15 +272,10 @@ exports.verifyProvider = async (req, res, next) => {
 
 exports.deleteProvider = async (req, res, next) => {
   try {
-    await ServiceProvider.updateOne(
-      { provider_id: Number(req.params.id) },
-      { $set: { status: 'Inactive', is_active: 0, updated_at: new Date() } }
-    );
-    await Package.updateMany(
-      { provider_id: Number(req.params.id) },
-      { $set: { is_active: 0, updated_at: new Date() } }
-    );
-    return successResponse(res, {}, 'Provider deactivated.');
+    // Hard delete: remove provider and related packages
+    await ServiceProvider.deleteOne({ provider_id: Number(req.params.id) });
+    await Package.deleteMany({ provider_id: Number(req.params.id) });
+    return successResponse(res, {}, 'Provider deleted.');
   } catch (err) { next(err); }
 };
 

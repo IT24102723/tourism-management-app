@@ -1,10 +1,5 @@
 import * as ImagePicker from 'expo-image-picker';
-import axios from 'axios';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-
-import { API_BASE_URL } from '../config/env';
-
-const API_BASE = API_BASE_URL; // Standardized based on server logs and api.js
+import API from './api';
 
 export const pickImage = async () => {
   // Request permissions
@@ -29,19 +24,18 @@ export const pickImage = async () => {
 
 export const uploadImage = async (imageAsset) => {
   try {
-    const token = await AsyncStorage.getItem('tss_access_token');
     const formData = new FormData();
-    
+
     // In React Native, we need to provide uri, type, and name
     formData.append('image', {
       uri: imageAsset.uri,
-      type: 'image/jpeg', // Defaulting to jpeg; could be dynamic from imageAsset.type
+      type: imageAsset.mimeType || 'image/jpeg',
       name: imageAsset.fileName || `upload-${Date.now()}.jpg`,
     });
 
-    const response = await axios.post(`${API_BASE}/upload`, formData, {
+    const response = await API.post('/upload', formData, {
       headers: {
-        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'multipart/form-data',
       },
     });
 

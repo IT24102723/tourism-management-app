@@ -7,7 +7,7 @@ import { API_BASE_URL } from '../config/env';
 const API = axios.create({
   baseURL: API_BASE_URL,
   timeout: 30000, // Increased to 30s for slower connections
-  validateStatus: (status) => status >= 200 && status < 500,
+  validateStatus: (status) => status >= 200 && status < 300,
 });
 
 
@@ -34,7 +34,7 @@ API.interceptors.response.use(
     return response;
   },
   (error) => {
-    const message = error.response?.data?.message || error.message || 'Connection Error';
+    let message = error.response?.data?.message || error.message || 'Connection Error';
     const status = error.response?.status;
 
     if (status === 401) {
@@ -43,7 +43,8 @@ API.interceptors.response.use(
     } else if (status === 500) {
       console.error('🔴 [500] Server Error');
     } else if (!error.response) {
-      console.error(`🔴 Network Error: Cannot reach ${API.defaults.baseURL}`);
+      message = `Network Error: Cannot reach ${API.defaults.baseURL}. Ensure your phone is on the same Wi-Fi as your PC (192.168.1.2).`;
+      console.error(`🔴 ${message}`);
     }
 
     console.error(`❌ API Error: ${message}`);

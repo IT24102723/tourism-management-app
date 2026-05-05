@@ -7,9 +7,9 @@ import { AuthContext } from '../context/AuthContext';
 
 export default function LoginScreen({ navigation }) {
   const { login } = useContext(AuthContext);
-  const [email, setEmail]     = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [loading, setLoading]   = useState(false);
+  const [loading, setLoading] = useState(false);
   const [showPass, setShowPass] = useState(false);
 
   const handleLogin = async () => {
@@ -19,8 +19,7 @@ export default function LoginScreen({ navigation }) {
     try {
       await login(email, password);
     } catch (e) {
-      const errorMsg = e.response?.data?.message
-        || e.message
+      const errorMsg = e.response?.data?.message || e.message
         || 'Connection failed. Please ensure the server is running.';
       Alert.alert('Login Failed', errorMsg);
     }
@@ -98,9 +97,9 @@ const styles = StyleSheet.create({
 
   // Hero
   hero: { alignItems: 'center', paddingTop: 70, paddingBottom: 36, paddingHorizontal: 24 },
-  heroFlag:  { fontSize: 52, marginBottom: 10 },
+  heroFlag: { fontSize: 52, marginBottom: 10 },
   heroTitle: { fontSize: 30, fontWeight: 'bold', color: '#fff', marginBottom: 6, textAlign: 'center' },
-  heroSub:   { fontSize: 14, color: '#87CEEB', textAlign: 'center' },
+  heroSub: { fontSize: 14, color: '#87CEEB', textAlign: 'center' },
 
   // Card
   card: {
@@ -114,7 +113,7 @@ const styles = StyleSheet.create({
     minHeight: 480,
   },
   cardTitle: { fontSize: 22, fontWeight: 'bold', color: '#1A3A4A', marginBottom: 4 },
-  cardSub:   { fontSize: 13, color: '#999', marginBottom: 28 },
+  cardSub: { fontSize: 13, color: '#999', marginBottom: 28 },
 
   label: { fontSize: 13, fontWeight: '600', color: '#555', marginBottom: 6 },
   input: {
@@ -127,9 +126,9 @@ const styles = StyleSheet.create({
     borderColor: '#E5E5E5',
     color: '#333',
   },
-  passRow:   { flexDirection: 'row', alignItems: 'center', marginBottom: 24, gap: 8 },
-  eyeBtn:    { width: 48, height: 52, alignItems: 'center', justifyContent: 'center' },
-  eyeText:   { fontSize: 20 },
+  passRow: { flexDirection: 'row', alignItems: 'center', marginBottom: 24, gap: 8 },
+  eyeBtn: { width: 48, height: 52, alignItems: 'center', justifyContent: 'center' },
+  eyeText: { fontSize: 20 },
 
   btn: {
     backgroundColor: '#0D5F8A',
@@ -143,7 +142,7 @@ const styles = StyleSheet.create({
   },
   btnText: { color: '#fff', fontWeight: 'bold', fontSize: 17 },
 
-  link:     { marginTop: 20, alignItems: 'center' },
+  link: { marginTop: 20, alignItems: 'center' },
   linkText: { color: '#888', fontSize: 14, textAlign: 'center' },
   linkBold: { color: '#0D5F8A', fontWeight: 'bold' },
 

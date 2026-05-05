@@ -38,19 +38,20 @@ const PORT = process.env.PORT || 5051;
 app.use(helmet());                              // Sets secure HTTP headers
 
 app.use(cors({
-  origin: [
-    'http://localhost:8081',
-    'https://tourism-management-app-beta.vercel.app'
-  ],
-  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-  credentials: true,
+    origin: [
+        'http://localhost:8081',
+        'https://tourism-management-app-beta.vercel.app',
+        /\.vercel\.app$/ // මෙය අමතර ආරක්ෂාවට (සියලුම Vercel preview links වලට ඉඩ දේ)
+    ],
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true,
 }));
 
 // 🔍 DEBUG: Log all incoming connections
 app.use((req, res, next) => {
-  console.log(`📡 [${new Date().toLocaleTimeString()}] ${req.method} ${req.originalUrl} from ${req.ip}`);
-  next();
+    console.log(`📡 [${new Date().toLocaleTimeString()}] ${req.method} ${req.originalUrl} from ${req.ip}`);
+    next();
 });
 
 app.use(morgan(process.env.NODE_ENV === 'production' ? 'combined' : 'dev'));
@@ -64,29 +65,29 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // ── Global rate limiter (protect all routes) ─────────────────
 const globalLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000,   // 15 minutes
-  max: 200,               // max 200 requests per window per IP
-  standardHeaders: true,
-  legacyHeaders: false,
-  message: { success: false, message: 'Too many requests, please try again later.' },
+    windowMs: 15 * 60 * 1000,   // 15 minutes
+    max: 200,               // max 200 requests per window per IP
+    standardHeaders: true,
+    legacyHeaders: false,
+    message: { success: false, message: 'Too many requests, please try again later.' },
 });
 app.use(globalLimiter);
 
 // ── Strict limiter for auth endpoints ────────────────────────
 const authLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 20,
-  message: { success: false, message: 'Too many authentication attempts.' },
+    windowMs: 15 * 60 * 1000,
+    max: 20,
+    message: { success: false, message: 'Too many authentication attempts.' },
 });
 
 // ── Health-check ─────────────────────────────────────────────
 app.get('/api/health', (req, res) => {
-  res.json({
-    success: true,
-    message: 'Tourism Support System API is running.',
-    timestamp: new Date().toISOString(),
-    version: '1.0.0',
-  });
+    res.json({
+        success: true,
+        message: 'Tourism Support System API is running.',
+        timestamp: new Date().toISOString(),
+        version: '1.0.0',
+    });
 });
 
 // ── API Routes ───────────────────────────────────────────────
@@ -103,7 +104,7 @@ app.use('/api/v1/upload', uploadRoutes);
 
 // ── 404 handler ──────────────────────────────────────────────
 app.use((req, res) => {
-  res.status(404).json({ success: false, message: `Route ${req.method} ${req.path} not found.` });
+    res.status(404).json({ success: false, message: `Route ${req.method} ${req.path} not found.` });
 });
 
 // ── Centralised error handler ──────────────────────────────
@@ -111,34 +112,34 @@ app.use(errorHandler);
 
 // ── Start server ─────────────────────────────────────────────
 (async () => {
-  try {
-    console.log('🔄 Connecting to MongoDB...');
-    await connectMongo();
-    console.log('✅ MongoDB connected successfully');
+    try {
+        console.log('🔄 Connecting to MongoDB...');
+        await connectMongo();
+        console.log('✅ MongoDB connected successfully');
 
-    app.listen(PORT, '0.0.0.0', () => {
-      const nets = os.networkInterfaces();
-      const addresses = [];
-      for (const name of Object.keys(nets)) {
-        for (const net of nets[name]) {
-          if (net.family === 'IPv4' && !net.internal) {
-            addresses.push(`http://${net.address}:${PORT}`);
-          }
-        }
-      }
+        app.listen(PORT, '0.0.0.0', () => {
+            const nets = os.networkInterfaces();
+            const addresses = [];
+            for (const name of Object.keys(nets)) {
+                for (const net of nets[name]) {
+                    if (net.family === 'IPv4' && !net.internal) {
+                        addresses.push(`http://${net.address}:${PORT}`);
+                    }
+                }
+            }
 
-      console.log(`\n🚀  Tourism Support System API`);
-      console.log(`   Listening on  : http://0.0.0.0:${PORT}`);
-      console.log(`   Primary IP    : http://${addresses[0].split('://')[1]}`);
-      console.log(`   Available IPs : ${addresses.join(', ')}`);
-      console.log(`   Environment   : ${process.env.NODE_ENV || 'development'}`);
-      console.log(`   Health check  : ${addresses[0]}/api/health\n`);
-    });
-  } catch (err) {
-    console.error('❌  Startup failed:', err.message);
-    console.error('Full error:', err);
-    process.exit(1);
-  }
+            console.log(`\n🚀  Tourism Support System API`);
+            console.log(`   Listening on  : http://0.0.0.0:${PORT}`);
+            console.log(`   Primary IP    : http://${addresses[0].split('://')[1]}`);
+            console.log(`   Available IPs : ${addresses.join(', ')}`);
+            console.log(`   Environment   : ${process.env.NODE_ENV || 'development'}`);
+            console.log(`   Health check  : ${addresses[0]}/api/health\n`);
+        });
+    } catch (err) {
+        console.error('❌  Startup failed:', err.message);
+        console.error('Full error:', err);
+        process.exit(1);
+    }
 })();
 
 module.exports = app;   // for testing
