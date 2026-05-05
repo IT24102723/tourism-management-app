@@ -8,7 +8,7 @@ import { Platform } from 'react-native';
 // Replace this with your COMPUTER'S IPv4 address (e.g., 192.168.1.5)
 // If you have deployed to Vercel, put your vercel URL here (e.g., 'your-app.vercel.app')
 export const LOCAL_MACHINE_IP = '192.168.1.2';
-export const PRODUCTION_API_URL = 'https://tourism-management-app-production-323d.up.railway.app';
+export const PRODUCTION_API_URL = 'https://tourism-management-app-production-323d.up.railway.app'; // Railway URL
 
 export const API_PORT = '5051';
 export const API_VERSION = 'v1';
@@ -29,9 +29,11 @@ const getBaseURL = () => {
 };
 
 export const API_BASE_URL = getBaseURL();
-export const IMAGE_BASE_URL = Platform.OS === 'web' && process.env.NODE_ENV === 'production'
-  ? PRODUCTION_API_URL
-  : `http://${LOCAL_MACHINE_IP}:${API_PORT}`;
+
+// Helper to determine the root domain for images
+const isProd = Platform.OS === 'web' && (process.env.NODE_ENV === 'production' || window.location.hostname !== 'localhost');
+
+export const IMAGE_BASE_URL = isProd ? PRODUCTION_API_URL : `http://${LOCAL_MACHINE_IP}:${API_PORT}`;
 
 console.log('🌐 API Config Initialized:');
 console.log(`   Base URL: ${API_BASE_URL}`);
