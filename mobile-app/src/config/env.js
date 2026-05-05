@@ -7,8 +7,12 @@ import { Platform } from 'react-native';
  */
 // Replace this with your COMPUTER'S IPv4 address (e.g., 192.168.1.5)
 // If you have deployed to Vercel, put your vercel URL here (e.g., 'your-app.vercel.app')
-export const LOCAL_MACHINE_IP = '192.168.1.2';
-export const PRODUCTION_API_URL = 'https://tourism-management-app-production-323d.up.railway.app'; // Railway URL
+
+// Environment variables in Expo must start with EXPO_PUBLIC_ to be accessible in code
+export const LOCAL_MACHINE_IP = process.env.EXPO_PUBLIC_LOCAL_IP || '192.168.1.2';
+
+// Fallback to the hardcoded URL if the environment variable is not set
+export const PRODUCTION_API_URL = process.env.EXPO_PUBLIC_API_URL || 'https://tourism-management-app-production-323d.up.railway.app';
 
 export const API_PORT = '5051';
 export const API_VERSION = 'v1';
