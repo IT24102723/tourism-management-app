@@ -13,9 +13,13 @@ export const PRODUCTION_API_URL = 'https://tourism-management-app-production-323
 export const API_PORT = '5051';
 export const API_VERSION = 'v1';
 
+// Helper to determine if we are in a production web environment (Vercel)
+const isProd = Platform.OS === 'web' &&
+  (process.env.NODE_ENV === 'production' || (typeof window !== 'undefined' && window.location.hostname !== 'localhost'));
+
 const getBaseURL = () => {
-  // If we are running in a deployed web environment (Vercel)
-  if (Platform.OS === 'web' && process.env.NODE_ENV === 'production') {
+  // If we are running in a deployed environment
+  if (isProd) {
     return `${PRODUCTION_API_URL}/api/${API_VERSION}`;
   }
 
@@ -29,9 +33,6 @@ const getBaseURL = () => {
 };
 
 export const API_BASE_URL = getBaseURL();
-
-// Helper to determine the root domain for images
-const isProd = Platform.OS === 'web' && (process.env.NODE_ENV === 'production' || window.location.hostname !== 'localhost');
 
 export const IMAGE_BASE_URL = isProd ? PRODUCTION_API_URL : `http://${LOCAL_MACHINE_IP}:${API_PORT}`;
 
