@@ -40,7 +40,8 @@ app.use(helmet());                              // Sets secure HTTP headers
 app.use(cors({
   origin: [
     'http://localhost:8081',
-    'https://tourism-management-app-beta.vercel.app'
+    'https://tourism-management-app-beta.vercel.app',
+    /\.vercel\.app$/
   ],
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
