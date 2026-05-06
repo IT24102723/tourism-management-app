@@ -1,0 +1,12 @@
+{
+  "version": 2,
+  "buildCommand": "cd mobile-app && npm run build",
+  "outputDirectory": "mobile-app/dist",
+  "rewrites": [
+    {
+      "source": "/(?!.*\\..*)",
+      "destination": "/index.html"
+    }
+  ]
+}
+
