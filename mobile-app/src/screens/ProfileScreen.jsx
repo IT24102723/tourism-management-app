@@ -62,7 +62,7 @@ export default function ProfileScreen({ navigation }) {
   const profileUri = resolveImageUrl(user?.profile_image);
 
   return (
-    <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: 40 }}>
+    <ScrollView style={styles.container} contentContainerStyle={{ flexGrow: 1, paddingBottom: 80 }}>
       <View style={styles.header}>
         <TouchableOpacity style={styles.avatarContainer} onPress={handlePickImage} disabled={uploading}>
           {profileUri ? (
