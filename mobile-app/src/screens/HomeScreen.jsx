@@ -65,7 +65,11 @@ export default function HomeScreen({ navigation }) {
   const handleLogout = () => {
     Alert.alert('Logout', 'Are you sure you want to sign out?', [
       { text: 'Cancel', style: 'cancel' },
-      { text: 'Logout', style: 'destructive', onPress: async () => { await logout(); navigation.navigate('Login'); } }
+      {
+        text: 'Logout',
+        style: 'destructive',
+        onPress: async () => { await logout(); navigation.reset({ index: 0, routes: [{ name: 'Login' }] }); }
+      }
     ]);
   };
 
@@ -258,7 +262,7 @@ const styles = StyleSheet.create({
   greeting: { color: '#fff', fontSize: 22, fontWeight: 'bold' },
   headerSub: { color: '#B8D7E8', fontSize: 13, marginTop: 2 },
   headerActions: { flexDirection: 'row', alignItems: 'center', gap: 12 },
-  logoutHeaderBtn: { padding: 8, backgroundColor: 'rgba(255,255,255,0.2)', borderRadius: 10 },
+  logoutHeaderBtn: { padding: 10, backgroundColor: 'rgba(255,255,255,0.2)', borderRadius: 12 },
   logoutEmoji: { fontSize: 18 },
   avatarBtn: { width: 45, height: 45, borderRadius: 23, borderWidth: 2, borderColor: '#fff', overflow: 'hidden' },
   avatar: { width: '100%', height: '100%' },
