@@ -1,5 +1,6 @@
 import * as ImagePicker from 'expo-image-picker';
 import API from './api';
+import { Platform } from 'react-native';
 
 export const pickImage = async () => {
   // Request permissions
@@ -26,12 +27,22 @@ export const uploadImage = async (imageAsset) => {
   try {
     const formData = new FormData();
 
-    // In React Native, we need to provide uri, type, and name
-    formData.append('image', {
-      uri: imageAsset.uri,
-      type: imageAsset.mimeType || 'image/jpeg',
-      name: imageAsset.fileName || `upload-${Date.now()}.jpg`,
-    });
+    const filename = imageAsset.fileName || `upload-${Date.now()}.jpg`;
+    const mimeType = imageAsset.mimeType || 'image/jpeg';
+
+    if (Platform.OS === 'web') {
+      // Expo web returns a blob: URL; Axios needs a Blob/File in FormData.
+      const blob = await fetch(imageAsset.uri).then((r) => r.blob());
+      const file = new File([blob], filename, { type: mimeType });
+      formData.append('image', file);
+    } else {
+      // React Native expects a { uri, type, name } object.
+      formData.append('image', {
+        uri: imageAsset.uri,
+        type: mimeType,
+        name: filename,
+      });
+    }
 
     const response = await API.post('/upload', formData, {
       headers: {

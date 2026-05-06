@@ -43,7 +43,7 @@ API.interceptors.response.use(
     } else if (status === 500) {
       console.error('🔴 [500] Server Error');
     } else if (!error.response) {
-      message = `Network Error: Cannot reach ${API.defaults.baseURL}. Ensure your phone is on the same Wi-Fi as your PC (192.168.1.2).`;
+      message = `Network Error: Unable to connect to the server. Please check your internet connection.`;
       console.error(`🔴 ${message}`);
     }
 
