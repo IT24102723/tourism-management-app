@@ -1,0 +1,4 @@
+# Prevent Vercel from treating root files as Serverless Functions
+src/
+assets/
+App.jsx
