@@ -39,7 +39,11 @@ export const AuthProvider = ({ children }) => {
     };
 
     const logout = async () => {
-        await AsyncStorage.multiRemove(['tss_access_token', 'tss_refresh_token', 'tss_user']);
+        try {
+            await AsyncStorage.multiRemove(['tss_access_token', 'tss_refresh_token', 'tss_user']);
+        } catch (e) {
+            console.error('Error during logout storage removal:', e);
+        }
         setUser(null);
     };
 

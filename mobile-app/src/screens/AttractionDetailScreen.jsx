@@ -68,7 +68,11 @@ export default function AttractionDetailScreen({ route, navigation }) {
   };
 
   return (
-    <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
+    <ScrollView 
+      style={styles.container} 
+      contentContainerStyle={{ flexGrow: 1, paddingBottom: 40 }}
+      showsVerticalScrollIndicator={false}
+    >
       {/* Header Image */}
       <View style={styles.imageContainer}>
         <Image

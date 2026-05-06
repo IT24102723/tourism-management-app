@@ -55,7 +55,7 @@ export default function PackageDetailScreen({ route, navigation }) {
   const typeColor = TYPE_COLORS[pkg.package_type] || '#0D5F8A';
 
   return (
-    <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: 50 }}>
+    <ScrollView style={styles.container} contentContainerStyle={{ flexGrow: 1, paddingBottom: 50 }}>
       {/* Hero */}
       <View style={styles.heroWrap}>
         <Image source={{ uri: heroUri }} style={styles.heroImage} />

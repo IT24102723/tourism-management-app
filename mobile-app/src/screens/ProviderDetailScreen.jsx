@@ -38,7 +38,7 @@ export default function ProviderDetailScreen({ route, navigation }) {
   const imageUri = resolveImageUrl(provider.image_url);
 
   return (
-    <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: 40 }}>
+    <ScrollView style={styles.container} contentContainerStyle={{ flexGrow: 1, paddingBottom: 40 }}>
       {/* Header Image */}
       <View style={styles.imageHeader}>
         {imageUri ? (

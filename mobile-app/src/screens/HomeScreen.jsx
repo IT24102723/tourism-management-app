@@ -68,7 +68,7 @@ export default function HomeScreen({ navigation }) {
       {
         text: 'Logout',
         style: 'destructive',
-        onPress: async () => { await logout(); navigation.reset({ index: 0, routes: [{ name: 'Login' }] }); }
+        onPress: async () => { await logout(); }
       }
     ]);
   };
@@ -85,6 +85,7 @@ export default function HomeScreen({ navigation }) {
   return (
     <ScrollView
       style={styles.container}
+      contentContainerStyle={{ flexGrow: 1, paddingBottom: 40 }}
       showsVerticalScrollIndicator={false}
       refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor="#fff" />}
     >

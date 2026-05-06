@@ -21,7 +21,7 @@ export default function ProfileScreen({ navigation }) {
       {
         text: 'Logout',
         style: 'destructive',
-        onPress: async () => { await logout(); navigation.reset({ index: 0, routes: [{ name: 'Login' }] }); }
+        onPress: async () => { await logout(); }
       },
     ]);
   };
