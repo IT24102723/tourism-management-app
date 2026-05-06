@@ -119,36 +119,70 @@ app.use((req, res) => {
 // ── Centralised error handler ──────────────────────────────
 app.use(errorHandler);
 
-// ── Start server ─────────────────────────────────────────────
-(async () => {
-  try {
-    console.log('🔄 Connecting to MongoDB...');
-    await connectMongo();
-    console.log('✅ MongoDB connected successfully');
+// ── Server start / serverless handler ─────────────────────────
+// Vercel serverless functions should NOT call `app.listen()` (that can cause
+// cold-start crashes). Instead, export a request handler and connect to Mongo
+// lazily.
+const isVercelServerless = Boolean(process.env.VERCEL || process.env.VERCEL_URL);
 
-    app.listen(PORT, '0.0.0.0', () => {
-      const nets = os.networkInterfaces();
-      const addresses = [];
-      for (const name of Object.keys(nets)) {
-        for (const net of nets[name]) {
-          if (net.family === 'IPv4' && !net.internal) {
-            addresses.push(`http://${net.address}:${PORT}`);
+async function ensureMongoConnected(req) {
+  // Health endpoints should stay up even if Mongo credentials are missing.
+  const url = String(req?.url || req?.originalUrl || req?.path || '');
+  const isHealth =
+    url === '/' ||
+    url === '/api/health' ||
+    url.startsWith('/api/health?');
+
+  if (isHealth) return;
+  await connectMongo();
+}
+
+if (isVercelServerless) {
+  module.exports = async (req, res) => {
+    try {
+      await ensureMongoConnected(req);
+      return app(req, res); // Express app is a valid (req,res) handler
+    } catch (err) {
+      console.error('❌ Serverless invocation failed:', err?.message || err);
+      return res.status(500).json({
+        success: false,
+        message:
+          'Server failed to initialise MongoDB. Check that `MONGO_URI` is set in Vercel Environment Variables.',
+      });
+    }
+  };
+} else {
+  // Start server (Railway / local usage)
+  (async () => {
+    try {
+      console.log('🔄 Connecting to MongoDB...');
+      await connectMongo();
+      console.log('✅ MongoDB connected successfully');
+
+      app.listen(PORT, '0.0.0.0', () => {
+        const nets = os.networkInterfaces();
+        const addresses = [];
+        for (const name of Object.keys(nets)) {
+          for (const net of nets[name]) {
+            if (net.family === 'IPv4' && !net.internal) {
+              addresses.push(`http://${net.address}:${PORT}`);
+            }
           }
         }
-      }
 
-      console.log(`\n🚀  Tourism Support System API`);
-      console.log(`   Listening on  : http://0.0.0.0:${PORT}`);
-      console.log(`   Primary IP    : http://${addresses[0].split('://')[1]}`);
-      console.log(`   Available IPs : ${addresses.join(', ')}`);
-      console.log(`   Environment   : ${process.env.NODE_ENV || 'development'}`);
-      console.log(`   Health check  : ${addresses[0]}/api/health\n`);
-    });
-  } catch (err) {
-    console.error('❌  Startup failed:', err.message);
-    console.error('Full error:', err);
-    process.exit(1);
-  }
-})();
+        console.log(`\n🚀  Tourism Support System API`);
+        console.log(`   Listening on  : http://0.0.0.0:${PORT}`);
+        console.log(`   Primary IP    : http://${addresses[0].split('://')[1]}`);
+        console.log(`   Available IPs : ${addresses.join(', ')}`);
+        console.log(`   Environment   : ${process.env.NODE_ENV || 'development'}`);
+        console.log(`   Health check  : ${addresses[0]}/api/health\n`);
+      });
+    } catch (err) {
+      console.error('❌  Startup failed:', err.message);
+      console.error('Full error:', err);
+      process.exit(1);
+    }
+  })();
 
-module.exports = app;   // for testing
+  module.exports = app; // for testing
+}

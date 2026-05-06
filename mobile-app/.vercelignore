@@ -1,1 +1,16 @@
-# Prevent Vercel from treating root files as Serverless Functions
+# Keep Vercel deploy focused on Expo web build output.
+# (Especially useful if the project root is misconfigured in Vercel.)
+
+# Repo-level folders (if Vercel is accidentally pointed at repo root)
+backend/
+scratch/
+.expo/
+.idea/
+
+# Node / Expo caches
+node_modules/
+.expo/
+.cache/
+
+# Logs
+*.log
