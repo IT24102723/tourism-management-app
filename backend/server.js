@@ -34,6 +34,10 @@ const uploadRoutes = require('./routes/upload.routes');
 const app = express();
 const PORT = process.env.PORT || 5051;
 
+// Required for Railway/Vercel/Heroku to correctly identify the user's IP
+// for the express-rate-limit middleware.
+app.set('trust proxy', 1);
+
 // ── Security & logging middleware ────────────────────────────
 app.use(helmet());                              // Sets secure HTTP headers
 
@@ -88,6 +92,11 @@ app.get('/api/health', (req, res) => {
     timestamp: new Date().toISOString(),
     version: '1.0.0',
   });
+});
+
+// Root route to avoid 404 logs on base URL
+app.get('/', (req, res) => {
+  res.json({ message: 'Welcome to the Tourism Support System API' });
 });
 
 // ── API Routes ───────────────────────────────────────────────
