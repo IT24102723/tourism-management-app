@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react';
 import {
   View, Text, StyleSheet, TouchableOpacity, Alert, Image,
-  ActivityIndicator, Modal, TextInput, ScrollView
+  ActivityIndicator, Modal, TextInput, ScrollView, Platform
 } from 'react-native';
 import { AuthContext } from '../context/AuthContext';
 import API from '../services/api';
@@ -16,14 +16,19 @@ export default function ProfileScreen({ navigation }) {
   const [editModal, setEditModal] = useState(false);
 
   const handleLogout = () => {
-    Alert.alert('Logout', 'Are you sure you want to logout?', [
-      { text: 'Cancel', style: 'cancel' },
-      {
-        text: 'Logout',
-        style: 'destructive',
-        onPress: async () => { await logout(); }
-      },
-    ]);
+    const message = 'Are you sure you want to logout?';
+    if (Platform.OS === 'web') {
+      if (window.confirm(message)) logout();
+    } else {
+      Alert.alert('Logout', message, [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Logout',
+          style: 'destructive',
+          onPress: async () => { await logout(); }
+        },
+      ]);
+    }
   };
 
   const handlePickImage = async () => {

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import {
   View, Text, StyleSheet, ScrollView, TouchableOpacity,
-  ActivityIndicator, Alert,
+  ActivityIndicator, Alert, Platform
 } from 'react-native';
 import API from '../services/api';
 import { AuthContext } from '../context/AuthContext';
@@ -56,14 +56,19 @@ export default function AdminDashboardScreen({ navigation }) {
   ];
 
   const handleLogout = () => {
-    Alert.alert('Logout', 'Are you sure you want to logout?', [
-      { text: 'Cancel', style: 'cancel' },
-      {
-        text: 'Logout',
-        style: 'destructive',
-        onPress: async () => { await logout(); navigation.reset({ index: 0, routes: [{ name: 'Login' }] }); }
-      },
-    ]);
+    const message = 'Are you sure you want to logout?';
+    if (Platform.OS === 'web') {
+      if (window.confirm(message)) logout();
+    } else {
+      Alert.alert('Logout', message, [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Logout',
+          style: 'destructive',
+          onPress: async () => { await logout(); }
+        },
+      ]);
+    }
   };
 
   return (

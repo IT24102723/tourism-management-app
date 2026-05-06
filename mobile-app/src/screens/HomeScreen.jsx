@@ -1,7 +1,7 @@
 import React, { useContext, useState, useEffect } from 'react';
 import {
   View, Text, StyleSheet, TouchableOpacity, ScrollView, RefreshControl,
-  ImageBackground, Image, Dimensions, StatusBar, Alert
+  ImageBackground, Image, Dimensions, StatusBar, Alert, Platform
 } from 'react-native';
 import { AuthContext } from '../context/AuthContext';
 import API from '../services/api';
@@ -63,14 +63,19 @@ export default function HomeScreen({ navigation }) {
   };
 
   const handleLogout = () => {
-    Alert.alert('Logout', 'Are you sure you want to sign out?', [
-      { text: 'Cancel', style: 'cancel' },
-      {
-        text: 'Logout',
-        style: 'destructive',
-        onPress: async () => { await logout(); }
-      }
-    ]);
+    const message = 'Are you sure you want to sign out?';
+    if (Platform.OS === 'web') {
+      if (window.confirm(message)) logout();
+    } else {
+      Alert.alert('Logout', message, [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Logout',
+          style: 'destructive',
+          onPress: async () => { await logout(); }
+        }
+      ]);
+    }
   };
 
   const categories = [

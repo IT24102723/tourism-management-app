@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useContext } from 'react';
 import {
   View, Text, StyleSheet, ScrollView, TouchableOpacity,
-  ActivityIndicator, RefreshControl, Alert, Image
+  ActivityIndicator, RefreshControl, Alert, Image, Platform
 } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import API from '../services/api';
@@ -44,14 +44,19 @@ export default function ProviderDashboardScreen({ navigation }) {
   };
 
   const handleLogout = () => {
-    Alert.alert('Logout', 'Are you sure you want to sign out?', [
-      { text: 'Cancel', style: 'cancel' },
-      {
-        text: 'Logout',
-        style: 'destructive',
-        onPress: async () => { await logout(); navigation.reset({ index: 0, routes: [{ name: 'Login' }] }); }
-      }
-    ]);
+    const message = 'Are you sure you want to sign out?';
+    if (Platform.OS === 'web') {
+      if (window.confirm(message)) logout();
+    } else {
+      Alert.alert('Logout', message, [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Logout',
+          style: 'destructive',
+          onPress: async () => { await logout(); }
+        }
+      ]);
+    }
   };
 
   if (loading && !refreshing) return (
