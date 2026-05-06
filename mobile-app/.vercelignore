@@ -1,6 +1,12 @@
 # Keep Vercel deploy focused on Expo web build output.
 # (Especially useful if the project root is misconfigured in Vercel.)
 
+# Prevent Vercel file-system functions from being created
+# from source files when a project is misdetected.
+index.js
+server.js
+App.js
+
 # Repo-level folders (if Vercel is accidentally pointed at repo root)
 backend/
 scratch/
