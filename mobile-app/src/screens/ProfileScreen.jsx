@@ -1,5 +1,8 @@
 import React, { useContext, useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Alert, Image, ActivityIndicator, Modal, TextInput } from 'react-native';
+import {
+  View, Text, StyleSheet, TouchableOpacity, Alert, Image,
+  ActivityIndicator, Modal, TextInput, ScrollView
+} from 'react-native';
 import { AuthContext } from '../context/AuthContext';
 import API from '../services/api';
 import { pickImage, uploadImage } from '../services/upload.service';
@@ -14,7 +17,7 @@ export default function ProfileScreen({ navigation }) {
 
   const handleLogout = () => {
     Alert.alert('Logout', 'Are you sure you want to logout?', [
-      { text: 'Cancel' },
+      { text: 'Cancel', style: 'cancel' },
       { text: 'Logout', style: 'destructive', onPress: logout },
     ]);
   };
@@ -59,7 +62,7 @@ export default function ProfileScreen({ navigation }) {
   const profileUri = resolveImageUrl(user?.profile_image);
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: 40 }}>
       <View style={styles.header}>
         <TouchableOpacity style={styles.avatarContainer} onPress={handlePickImage} disabled={uploading}>
           {profileUri ? (
@@ -87,8 +90,8 @@ export default function ProfileScreen({ navigation }) {
 
       <View style={styles.card}>
         {[
-          ['Username', user?.username], 
-          ['Email', user?.email], 
+          ['Username', user?.username],
+          ['Email', user?.email],
           ['Full Name', user?.full_name || '—'],
           ['Phone', user?.phone || '—']
         ].map(([k, v]) => (
@@ -126,19 +129,19 @@ export default function ProfileScreen({ navigation }) {
         <View style={styles.modalOverlay}>
           <View style={styles.modalContent}>
             <Text style={styles.modalTitle}>Edit Profile Info</Text>
-            
+
             <Text style={styles.fieldLabel}>Full Name</Text>
-            <TextInput 
-              style={styles.fieldInput} 
-              value={editForm.full_name} 
-              onChangeText={v => setEditForm({...editForm, full_name: v})} 
+            <TextInput
+              style={styles.fieldInput}
+              value={editForm.full_name}
+              onChangeText={v => setEditForm({ ...editForm, full_name: v })}
             />
 
             <Text style={styles.fieldLabel}>Phone Number</Text>
-            <TextInput 
-              style={styles.fieldInput} 
-              value={editForm.phone} 
-              onChangeText={v => setEditForm({...editForm, phone: v})} 
+            <TextInput
+              style={styles.fieldInput}
+              value={editForm.phone}
+              onChangeText={v => setEditForm({ ...editForm, phone: v })}
               keyboardType="phone-pad"
               maxLength={10}
             />
@@ -154,32 +157,32 @@ export default function ProfileScreen({ navigation }) {
           </View>
         </View>
       </Modal>
-    </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  container:  { flex: 1, backgroundColor: '#f0f4f8' },
-  header:     { backgroundColor: '#2E86AB', alignItems: 'center', padding: 32, paddingTop: 60, borderBottomLeftRadius: 24, borderBottomRightRadius: 24 },
+  container: { flex: 1, backgroundColor: '#f0f4f8' },
+  header: { backgroundColor: '#2E86AB', alignItems: 'center', padding: 32, paddingTop: 60, borderBottomLeftRadius: 24, borderBottomRightRadius: 24 },
   avatarContainer: { position: 'relative', marginBottom: 12 },
-  avatarImg:   { width: 80, height: 80, borderRadius: 40, backgroundColor: '#fff' },
-  avatar:     { width: 80, height: 80, borderRadius: 40, backgroundColor: 'rgba(255,255,255,0.3)', justifyContent: 'center', alignItems: 'center' },
+  avatarImg: { width: 80, height: 80, borderRadius: 40, backgroundColor: '#fff' },
+  avatar: { width: 80, height: 80, borderRadius: 40, backgroundColor: 'rgba(255,255,255,0.3)', justifyContent: 'center', alignItems: 'center' },
   uploadOverlay: { position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(0,0,0,0.4)', borderRadius: 40, justifyContent: 'center', alignItems: 'center' },
-  editBadge:  { position: 'absolute', bottom: 0, right: 0, backgroundColor: '#fff', width: 24, height: 24, borderRadius: 12, justifyContent: 'center', alignItems: 'center', elevation: 3, shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.2 },
+  editBadge: { position: 'absolute', bottom: 0, right: 0, backgroundColor: '#fff', width: 24, height: 24, borderRadius: 12, justifyContent: 'center', alignItems: 'center', elevation: 3, shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.2 },
   avatarText: { color: '#fff', fontSize: 36, fontWeight: 'bold' },
-  name:       { fontSize: 22, fontWeight: 'bold', color: '#fff' },
-  email:      { color: '#cce8f4', marginTop: 4, fontSize: 13 },
-  roleBadge:  { borderRadius: 12, paddingHorizontal: 14, paddingVertical: 4, marginTop: 10 },
-  roleText:   { color: '#fff', fontWeight: '700', fontSize: 12 },
-  card:       { backgroundColor: '#fff', marginHorizontal: 16, marginTop: 20, borderRadius: 14, padding: 16, elevation: 2 },
-  row:        { flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 10, borderBottomWidth: 1, borderBottomColor: '#f5f5f5' },
-  label:      { color: '#888', fontSize: 13 },
-  value:      { fontWeight: '600', color: '#333', fontSize: 13 },
-  menuCard:   { backgroundColor: '#fff', marginHorizontal: 16, marginTop: 12, borderRadius: 14, overflow: 'hidden', elevation: 2 },
-  menuItem:   { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', padding: 16, borderBottomWidth: 1, borderBottomColor: '#f5f5f5' },
-  menuText:   { fontSize: 14, color: '#333', fontWeight: '500' },
-  menuArrow:  { color: '#aaa', fontSize: 20 },
-  logoutBtn:  { margin: 16, backgroundColor: '#E74C3C', borderRadius: 12, padding: 16, alignItems: 'center' },
+  name: { fontSize: 22, fontWeight: 'bold', color: '#fff' },
+  email: { color: '#cce8f4', marginTop: 4, fontSize: 13 },
+  roleBadge: { borderRadius: 12, paddingHorizontal: 14, paddingVertical: 4, marginTop: 10 },
+  roleText: { color: '#fff', fontWeight: '700', fontSize: 12 },
+  card: { backgroundColor: '#fff', marginHorizontal: 16, marginTop: 20, borderRadius: 14, padding: 16, elevation: 2 },
+  row: { flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 10, borderBottomWidth: 1, borderBottomColor: '#f5f5f5' },
+  label: { color: '#888', fontSize: 13 },
+  value: { fontWeight: '600', color: '#333', fontSize: 13 },
+  menuCard: { backgroundColor: '#fff', marginHorizontal: 16, marginTop: 12, borderRadius: 14, overflow: 'hidden', elevation: 2 },
+  menuItem: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', padding: 16, borderBottomWidth: 1, borderBottomColor: '#f5f5f5' },
+  menuText: { fontSize: 14, color: '#333', fontWeight: '500' },
+  menuArrow: { color: '#aaa', fontSize: 20 },
+  logoutBtn: { margin: 16, backgroundColor: '#E74C3C', borderRadius: 12, padding: 16, alignItems: 'center' },
   logoutText: { color: '#fff', fontWeight: 'bold', fontSize: 16 },
   editProfileBtn: { marginTop: 10, padding: 8, alignItems: 'center' },
   editProfileBtnText: { color: '#2E86AB', fontWeight: 'bold', fontSize: 12 },

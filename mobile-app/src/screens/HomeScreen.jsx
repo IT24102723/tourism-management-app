@@ -1,7 +1,7 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { 
-  View, Text, StyleSheet, TouchableOpacity, ScrollView, RefreshControl, 
-  ImageBackground, Image, Dimensions, StatusBar
+import {
+  View, Text, StyleSheet, TouchableOpacity, ScrollView, RefreshControl,
+  ImageBackground, Image, Dimensions, StatusBar, Alert
 } from 'react-native';
 import { AuthContext } from '../context/AuthContext';
 import API from '../services/api';
@@ -11,13 +11,13 @@ import { resolveImageUrl } from '../utils/imageUtils';
 const { width } = Dimensions.get('window');
 
 export default function HomeScreen({ navigation }) {
-  const { user } = useContext(AuthContext);
+  const { user, logout } = useContext(AuthContext);
   const [stats, setStats] = useState({ attractions: 0, packages: 0, rating: '4.9' });
   const [refreshing, setRefreshing] = useState(false);
   const [featured, setFeatured] = useState([]);
   const [bestProviders, setBestProviders] = useState([]);
 
-  useEffect(() => { 
+  useEffect(() => {
     fetchStats();
     fetchFeatured();
     fetchBestProviders();
@@ -38,8 +38,8 @@ export default function HomeScreen({ navigation }) {
       ]);
       setStats({
         attractions: attrRes.data?.data?.pagination?.total || 120,
-        packages:    pkgRes.data?.data?.pagination?.total || 45,
-        rating:      '4.9',
+        packages: pkgRes.data?.data?.pagination?.total || 45,
+        rating: '4.9',
       });
     } catch (e) {
       console.error('Error fetching stats:', e.message);
@@ -62,26 +62,33 @@ export default function HomeScreen({ navigation }) {
     } catch (e) { console.log(e); }
   };
 
+  const handleLogout = () => {
+    Alert.alert('Logout', 'Are you sure you want to sign out?', [
+      { text: 'Cancel', style: 'cancel' },
+      { text: 'Logout', style: 'destructive', onPress: logout }
+    ]);
+  };
+
   const categories = [
     { title: 'Attractions', icon: '⛰️', sub: 'Explore Spots', screen: 'Attractions', color: '#E3F2FD' },
-    { title: 'Packages',    icon: '🏝️', sub: 'Tour Deals',    screen: 'Packages',    color: '#FFF3E0' },
-    { title: 'Providers',   icon: '🏨', sub: 'Book Services', screen: 'Providers',   color: '#E8F5E9' },
-    { title: 'Transport',   icon: '🚆', sub: 'Travel Easy',   screen: 'Transport',   color: '#FCE4EC' },
+    { title: 'Packages', icon: '🏝️', sub: 'Tour Deals', screen: 'Packages', color: '#FFF3E0' },
+    { title: 'Providers', icon: '🏨', sub: 'Book Services', screen: 'Providers', color: '#E8F5E9' },
+    { title: 'Transport', icon: '🚆', sub: 'Travel Easy', screen: 'Transport', color: '#FCE4EC' },
   ];
 
   const greeting = user?.full_name?.split(' ')[0] || user?.username || 'Traveler';
 
   return (
-    <ScrollView 
-      style={styles.container} 
+    <ScrollView
+      style={styles.container}
       showsVerticalScrollIndicator={false}
       refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor="#fff" />}
     >
       <StatusBar barStyle="light-content" />
-      
+
       {/* Hero Section */}
-      <ImageBackground 
-        source={{ uri: 'https://images.unsplash.com/photo-1544735716-392fe2489ffa?w=900&auto=format&fit=crop' }} 
+      <ImageBackground
+        source={{ uri: 'https://images.unsplash.com/photo-1544735716-392fe2489ffa?w=900&auto=format&fit=crop' }}
         style={styles.hero}
       >
         <LinearGradient
@@ -89,22 +96,27 @@ export default function HomeScreen({ navigation }) {
           style={styles.heroGradient}
         >
           <View style={styles.headerTop}>
-            <View>
+            <View style={{ flex: 1 }}>
               <Text style={styles.greeting}>Ayubowan, {greeting}! 🙏</Text>
               <Text style={styles.headerSub}>Welcome to Paradise Island 🇱🇰</Text>
             </View>
-            <TouchableOpacity onPress={() => navigation.navigate('Profile')} style={styles.avatarBtn}>
-              <Image 
-                source={{ uri: user?.profile_image ? resolveImageUrl(user.profile_image) : 'https://ui-avatars.com/api/?name=' + greeting }}
-                style={styles.avatar}
-              />
-            </TouchableOpacity>
+            <View style={styles.headerActions}>
+              <TouchableOpacity onPress={handleLogout} style={styles.logoutHeaderBtn}>
+                <Text style={styles.logoutEmoji}>🚪</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => navigation.navigate('Profile')} style={styles.avatarBtn}>
+                <Image
+                  source={{ uri: user?.profile_image ? resolveImageUrl(user.profile_image) : 'https://ui-avatars.com/api/?name=' + greeting }}
+                  style={styles.avatar}
+                />
+              </TouchableOpacity>
+            </View>
           </View>
-          
+
           <View style={styles.heroContent}>
             <Text style={styles.heroTitle}>Discover the Wonders of Sri Lanka</Text>
-            <TouchableOpacity 
-              style={styles.searchBar} 
+            <TouchableOpacity
+              style={styles.searchBar}
               onPress={() => navigation.navigate('Attractions')}
               activeOpacity={0.8}
             >
@@ -117,8 +129,8 @@ export default function HomeScreen({ navigation }) {
       {/* Categories */}
       <View style={styles.categoryRow}>
         {categories.map((cat, i) => (
-          <TouchableOpacity 
-            key={i} 
+          <TouchableOpacity
+            key={i}
             style={styles.catItem}
             onPress={() => navigation.navigate(cat.screen)}
           >
@@ -140,14 +152,14 @@ export default function HomeScreen({ navigation }) {
         </View>
         <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.carousel}>
           {featured.map((item, i) => (
-            <TouchableOpacity 
-              key={i} 
+            <TouchableOpacity
+              key={i}
               style={styles.featCard}
               onPress={() => navigation.navigate('AttractionDetail', { id: item.attraction_id })}
             >
-              <Image 
-                source={{ uri: item.image_url ? resolveImageUrl(item.image_url) : 'https://picsum.photos/seed/' + i + '/300/200' }} 
-                style={styles.featImg} 
+              <Image
+                source={{ uri: item.image_url ? resolveImageUrl(item.image_url) : 'https://picsum.photos/seed/' + i + '/300/200' }}
+                style={styles.featImg}
               />
               <LinearGradient colors={['transparent', 'rgba(0,0,0,0.7)']} style={styles.featGradient}>
                 <Text style={styles.featTitle}>{item.name}</Text>
@@ -172,8 +184,8 @@ export default function HomeScreen({ navigation }) {
           </View>
           <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.carousel}>
             {bestProviders.map((item, i) => (
-              <TouchableOpacity 
-                key={i} 
+              <TouchableOpacity
+                key={i}
                 style={styles.providerCard}
                 onPress={() => navigation.navigate('ProviderDetail', { id: item._id })}
               >
@@ -192,11 +204,11 @@ export default function HomeScreen({ navigation }) {
       )}
 
       {/* Promo Banner */}
-      <TouchableOpacity 
+      <TouchableOpacity
         style={styles.promoBanner}
         onPress={() => navigation.navigate('Packages')}
       >
-        <LinearGradient colors={['#0D5F8A', '#2E86AB']} start={{x:0, y:0}} end={{x:1, y:0}} style={styles.promoGradient}>
+        <LinearGradient colors={['#0D5F8A', '#2E86AB']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} style={styles.promoGradient}>
           <View style={styles.promoContent}>
             <Text style={styles.promoTitle}>Exclusive Tour Packages</Text>
             <Text style={styles.promoSub}>Book now and get 20% off on your first trip!</Text>
@@ -238,13 +250,16 @@ export default function HomeScreen({ navigation }) {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#fff' },
-  
+
   // Hero
   hero: { width: '100%', height: 320 },
   heroGradient: { flex: 1, padding: 20, justifyContent: 'space-between' },
   headerTop: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingTop: 30 },
   greeting: { color: '#fff', fontSize: 22, fontWeight: 'bold' },
   headerSub: { color: '#B8D7E8', fontSize: 13, marginTop: 2 },
+  headerActions: { flexDirection: 'row', alignItems: 'center', gap: 12 },
+  logoutHeaderBtn: { padding: 8, backgroundColor: 'rgba(255,255,255,0.2)', borderRadius: 10 },
+  logoutEmoji: { fontSize: 18 },
   avatarBtn: { width: 45, height: 45, borderRadius: 23, borderWidth: 2, borderColor: '#fff', overflow: 'hidden' },
   avatar: { width: '100%', height: '100%' },
   heroContent: { paddingBottom: 10 },
@@ -264,7 +279,7 @@ const styles = StyleSheet.create({
   sectionHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 15 },
   sectionTitle: { fontSize: 18, fontWeight: 'bold', color: '#1A3A4A' },
   seeAll: { color: '#0D5F8A', fontSize: 13, fontWeight: 'bold' },
-  
+
   // Carousel
   carousel: { marginRight: -20 },
   featCard: { width: 220, height: 160, borderRadius: 16, marginRight: 15, overflow: 'hidden', elevation: 4, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.15 },
