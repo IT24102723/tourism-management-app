@@ -1,11 +1,19 @@
 {
   "version": 2,
-  "buildCommand": "cd mobile-app && npm run build",
-  "outputDirectory": "mobile-app/dist",
-  "rewrites": [
+  "builds": [
     {
-      "source": "/(?!.*\\..*)",
-      "destination": "/index.html"
+      "src": "mobile-app/package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "dist"
+      }
+    }
+  ],
+  "routes": [
+    { "handle": "filesystem" },
+    {
+      "src": "/(?!.*\\..*)",
+      "dest": "/index.html"
     }
   ]
 }
