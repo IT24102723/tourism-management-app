@@ -6,12 +6,16 @@ export const resolveImageUrl = (url) => {
   if (!url) return null;
   if (url.startsWith('http')) return url;
   
+  // Normalize Windows paths (uploads\file.jpg) -> (uploads/file.jpg)
+  const normalized = String(url).replace(/\\/g, '/');
+
   // Ensure we have a leading slash for relative paths
-  const cleanPath = url.startsWith('/') ? url : `/${url}`;
+  const cleanPath = normalized.startsWith('/') ? normalized : `/${normalized}`;
   
   // If it's a relative path (contains slash or is likely an upload), prepend base
   if (cleanPath.includes('/') || cleanPath.includes('\\')) {
-    return `${API_STATIC_BASE}${cleanPath}`;
+    // Avoid accidental double slashes between host and path
+    return `${API_STATIC_BASE}`.replace(/\/+$/, '') + cleanPath;
   }
   
   return url;
