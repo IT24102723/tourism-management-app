@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useContext } from 'react';
 import {
   View, Text, StyleSheet, FlatList, TouchableOpacity,
-  ActivityIndicator, Alert, TextInput, Modal, ScrollView,
+  ActivityIndicator, Alert, TextInput, Modal, ScrollView, Platform
 } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import API from '../services/api';
@@ -110,20 +110,37 @@ export default function AdminVehiclesScreen({ navigation, route }) {
   };
 
   const handleDelete = (item) => {
-    Alert.alert('Delete Vehicle', `Delete "${item.vehicle_name}"?`, [
-      { text: 'Cancel', style: 'cancel' },
-      { text: 'Delete', style: 'destructive', onPress: async () => {
-        try {
-          const res = await API.delete(`/transport/vehicles/${item.vehicle_id}`);
-          console.log('Delete Response:', res.data);
-          Alert.alert('✅ Deleted', 'Vehicle removed successfully.');
-          fetchAll();
-        } catch (e) {
-          console.error('Error deleting vehicle:', e.response?.data || e.message);
-          Alert.alert('Error', e.response?.data?.message || 'Delete failed.');
-        }
-      }},
-    ]);
+    const message = `Delete "${item.vehicle_name}"?`;
+    if (Platform.OS === 'web') {
+      if (window.confirm(message)) {
+        (async () => {
+          try {
+            const res = await API.delete(`/transport/vehicles/${item.vehicle_id}`);
+            console.log('Delete Response:', res.data);
+            Alert.alert('✅ Deleted', 'Vehicle removed successfully.');
+            fetchAll();
+          } catch (e) {
+            console.error('Error deleting vehicle:', e.response?.data || e.message);
+            Alert.alert('Error', e.response?.data?.message || 'Delete failed.');
+          }
+        })();
+      }
+    } else {
+      Alert.alert('Delete Vehicle', message, [
+        { text: 'Cancel', style: 'cancel' },
+        { text: 'Delete', style: 'destructive', onPress: async () => {
+          try {
+            const res = await API.delete(`/transport/vehicles/${item.vehicle_id}`);
+            console.log('Delete Response:', res.data);
+            Alert.alert('✅ Deleted', 'Vehicle removed successfully.');
+            fetchAll();
+          } catch (e) {
+            console.error('Error deleting vehicle:', e.response?.data || e.message);
+            Alert.alert('Error', e.response?.data?.message || 'Delete failed.');
+          }
+        }},
+      ]);
+    }
   };
 
   const setField = (k, v) => setEditItem(p => ({ ...p, [k]: v }));

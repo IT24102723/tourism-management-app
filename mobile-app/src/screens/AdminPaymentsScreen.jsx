@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react';
-import { View, Text, FlatList, TouchableOpacity, StyleSheet, ActivityIndicator, Alert, Modal } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, StyleSheet, ActivityIndicator, Alert, Modal, Platform } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import { Picker } from '@react-native-picker/picker';
 import API from '../services/api';
@@ -32,33 +32,63 @@ export default function AdminPaymentsScreen({ navigation }) {
   };
 
   const handleRefund = (id) => {
-    Alert.alert('Refund Payment', 'Are you sure you want to refund this payment?', [
-      { text: 'Cancel', style: 'cancel' },
-      { text: 'Refund', style: 'destructive', onPress: async () => {
-        try {
-          await API.post(`/payments/${id}/refund`);
-          Alert.alert('Success', 'Payment refunded successfully.');
-          fetchPayments();
-        } catch (e) {
-          Alert.alert('Error', e.response?.data?.message || 'Failed to refund payment.');
-        }
-      }}
-    ]);
+    const message = 'Are you sure you want to refund this payment?';
+    if (Platform.OS === 'web') {
+      if (window.confirm(message)) {
+        (async () => {
+          try {
+            await API.post(`/payments/${id}/refund`);
+            Alert.alert('Success', 'Payment refunded successfully.');
+            fetchPayments();
+          } catch (e) {
+            Alert.alert('Error', e.response?.data?.message || 'Failed to refund payment.');
+          }
+        })();
+      }
+    } else {
+      Alert.alert('Refund Payment', message, [
+        { text: 'Cancel', style: 'cancel' },
+        { text: 'Refund', style: 'destructive', onPress: async () => {
+          try {
+            await API.post(`/payments/${id}/refund`);
+            Alert.alert('Success', 'Payment refunded successfully.');
+            fetchPayments();
+          } catch (e) {
+            Alert.alert('Error', e.response?.data?.message || 'Failed to refund payment.');
+          }
+        }}
+      ]);
+    }
   };
 
   const handleDelete = (id) => {
-    Alert.alert('Delete Payment', 'Are you sure you want to completely delete this payment record?', [
-      { text: 'Cancel', style: 'cancel' },
-      { text: 'Delete', style: 'destructive', onPress: async () => {
-        try {
-          await API.delete(`/payments/${id}`);
-          Alert.alert('Deleted', 'Payment record has been deleted.');
-          fetchPayments();
-        } catch (e) {
-          Alert.alert('Error', e.response?.data?.message || 'Failed to delete payment.');
-        }
-      }}
-    ]);
+    const message = 'Are you sure you want to completely delete this payment record?';
+    if (Platform.OS === 'web') {
+      if (window.confirm(message)) {
+        (async () => {
+          try {
+            await API.delete(`/payments/${id}`);
+            Alert.alert('Deleted', 'Payment record has been deleted.');
+            fetchPayments();
+          } catch (e) {
+            Alert.alert('Error', e.response?.data?.message || 'Failed to delete payment.');
+          }
+        })();
+      }
+    } else {
+      Alert.alert('Delete Payment', message, [
+        { text: 'Cancel', style: 'cancel' },
+        { text: 'Delete', style: 'destructive', onPress: async () => {
+          try {
+            await API.delete(`/payments/${id}`);
+            Alert.alert('Deleted', 'Payment record has been deleted.');
+            fetchPayments();
+          } catch (e) {
+            Alert.alert('Error', e.response?.data?.message || 'Failed to delete payment.');
+          }
+        }}
+      ]);
+    }
   };
 
   const openEdit = (item) => {

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import {
   View, Text, StyleSheet, FlatList, TouchableOpacity,
-  ActivityIndicator, Alert, TextInput, Modal, ScrollView,
+  ActivityIndicator, Alert, TextInput, Modal, ScrollView, Platform
 } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import API from '../services/api';
@@ -108,15 +108,27 @@ export default function AdminAttractionsScreen({ navigation }) {
   };
 
   const handleDelete = (item) => {
-    Alert.alert('Delete Attraction', `Delete "${item.name}"?`, [
-      { text: 'Cancel', style: 'cancel' },
-      { text: 'Delete', style: 'destructive', onPress: async () => {
-        try {
-          await API.delete(`/attractions/${item.attraction_id}`);
-          fetchAll();
-        } catch (e) { Alert.alert('Error', e.response?.data?.message || 'Delete failed.'); }
-      }},
-    ]);
+    const message = `Delete "${item.name}"?`;
+    if (Platform.OS === 'web') {
+      if (window.confirm(message)) {
+        (async () => {
+          try {
+            await API.delete(`/attractions/${item.attraction_id}`);
+            fetchAll();
+          } catch (e) { Alert.alert('Error', e.response?.data?.message || 'Delete failed.'); }
+        })();
+      }
+    } else {
+      Alert.alert('Delete Attraction', message, [
+        { text: 'Cancel', style: 'cancel' },
+        { text: 'Delete', style: 'destructive', onPress: async () => {
+          try {
+            await API.delete(`/attractions/${item.attraction_id}`);
+            fetchAll();
+          } catch (e) { Alert.alert('Error', e.response?.data?.message || 'Delete failed.'); }
+        }},
+      ]);
+    }
   };
 
   const filtered = attractions.filter(a =>

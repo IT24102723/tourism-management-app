@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useContext } from 'react';
 import {
   View, Text, StyleSheet, FlatList, TouchableOpacity,
-  ActivityIndicator, Alert, TextInput, Modal, ScrollView,
+  ActivityIndicator, Alert, TextInput, Modal, ScrollView, Platform
 } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import API from '../services/api';
@@ -90,15 +90,27 @@ export default function AdminSchedulesScreen({ navigation }) {
   };
 
   const handleDelete = (item) => {
-    Alert.alert('Delete Schedule', `Delete "${item.title}"?`, [
-      { text: 'Cancel', style: 'cancel' },
-      { text: 'Delete', style: 'destructive', onPress: async () => {
-        try {
-          await API.delete(`/transport/schedules/${item.schedule_id}`);
-          fetchAll();
-        } catch (e) { Alert.alert('Error', e.response?.data?.message || 'Delete failed.'); }
-      }},
-    ]);
+    const message = `Delete "${item.title}"?`;
+    if (Platform.OS === 'web') {
+      if (window.confirm(message)) {
+        (async () => {
+          try {
+            await API.delete(`/transport/schedules/${item.schedule_id}`);
+            fetchAll();
+          } catch (e) { Alert.alert('Error', e.response?.data?.message || 'Delete failed.'); }
+        })();
+      }
+    } else {
+      Alert.alert('Delete Schedule', message, [
+        { text: 'Cancel', style: 'cancel' },
+        { text: 'Delete', style: 'destructive', onPress: async () => {
+          try {
+            await API.delete(`/transport/schedules/${item.schedule_id}`);
+            fetchAll();
+          } catch (e) { Alert.alert('Error', e.response?.data?.message || 'Delete failed.'); }
+        }},
+      ]);
+    }
   };
 
   const setField = (k, v) => setEditItem(p => ({ ...p, [k]: v }));

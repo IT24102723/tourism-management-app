@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import {
   View, Text, StyleSheet, FlatList, TouchableOpacity,
-  ActivityIndicator, Alert, Modal, ScrollView, TextInput, Image,
+  ActivityIndicator, Alert, Modal, ScrollView, TextInput, Image, Platform
 } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import API from '../services/api';
@@ -112,15 +112,27 @@ export default function AdminProvidersScreen({ navigation }) {
   };
 
   const handleDelete = (item) => {
-    Alert.alert('Delete Provider', `Delete "${item.business_name}"?`, [
-      { text: 'Cancel', style: 'cancel' },
-      { text: 'Delete', style: 'destructive', onPress: async () => {
-        try {
-          await API.delete(`/providers/${item.provider_id}`);
-          fetchAll();
-        } catch (e) { Alert.alert('Error', e.response?.data?.message || 'Delete failed.'); }
-      }},
-    ]);
+    const message = `Delete "${item.business_name}"?`;
+    if (Platform.OS === 'web') {
+      if (window.confirm(message)) {
+        (async () => {
+          try {
+            await API.delete(`/providers/${item.provider_id}`);
+            fetchAll();
+          } catch (e) { Alert.alert('Error', e.response?.data?.message || 'Delete failed.'); }
+        })();
+      }
+    } else {
+      Alert.alert('Delete Provider', message, [
+        { text: 'Cancel', style: 'cancel' },
+        { text: 'Delete', style: 'destructive', onPress: async () => {
+          try {
+            await API.delete(`/providers/${item.provider_id}`);
+            fetchAll();
+          } catch (e) { Alert.alert('Error', e.response?.data?.message || 'Delete failed.'); }
+        }},
+      ]);
+    }
   };
 
   const filtered = providers.filter(p =>

@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import {
   View, Text, StyleSheet, FlatList, TouchableOpacity,
-  ActivityIndicator, Alert, TextInput, Modal, ScrollView, Image,
+  ActivityIndicator, Alert, TextInput, Modal, ScrollView, Image, Platform
 } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import API from '../services/api';
@@ -121,17 +121,29 @@ export default function AdminPackagesScreen({ navigation, route }) {
   };
 
   const handleDelete = (item) => {
-    Alert.alert('Delete Package', `Delete "${item.title}"?`, [
-      { text: 'Cancel', style: 'cancel' },
-      {
-        text: 'Delete', style: 'destructive', onPress: async () => {
+    const message = `Delete "${item.title}"?`;
+    if (Platform.OS === 'web') {
+      if (window.confirm(message)) {
+        (async () => {
           try {
             await API.delete(`/packages/${item.package_id}`);
             fetchAll();
           } catch (e) { Alert.alert('Error', e.response?.data?.message || 'Delete failed.'); }
-        }
-      },
-    ]);
+        })();
+      }
+    } else {
+      Alert.alert('Delete Package', message, [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Delete', style: 'destructive', onPress: async () => {
+            try {
+              await API.delete(`/packages/${item.package_id}`);
+              fetchAll();
+            } catch (e) { Alert.alert('Error', e.response?.data?.message || 'Delete failed.'); }
+          }
+        },
+      ]);
+    }
   };
 
   const setField = (k, v) => setEditItem(p => ({ ...p, [k]: v }));
