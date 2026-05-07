@@ -69,17 +69,12 @@ export default function AttractionDetailScreen({ route, navigation }) {
     Under_Maintenance: '#95A5A6'
   };
 
-  const webHeight = Platform.OS === 'web'
-    ? (typeof window !== 'undefined' ? window.innerHeight : SCREEN_HEIGHT)
-    : null;
-
   return (
-    <View style={Platform.OS === 'web' ? { height: webHeight, overflow: 'hidden', flex: 1, backgroundColor: '#F5F7FA' } : { flex: 1, backgroundColor: '#F5F7FA' }}>
-      <ScrollView 
-        style={styles.container} 
-        contentContainerStyle={{ flexGrow: 1, paddingBottom: 80 }}
-        showsVerticalScrollIndicator={true}
-      >
+    <ScrollView 
+      style={[styles.container, Platform.OS === 'web' && { height: '100vh' }]} 
+      contentContainerStyle={{ flexGrow: 1, paddingBottom: 120 }}
+      showsVerticalScrollIndicator={true}
+    >
       {/* Header Image */}
       <View style={styles.imageContainer}>
         <Image
@@ -200,8 +195,7 @@ export default function AttractionDetailScreen({ route, navigation }) {
           </TouchableOpacity>
         </View>
       </View>
-      </ScrollView>
-    </View>
+    </ScrollView>
   );
 }
 

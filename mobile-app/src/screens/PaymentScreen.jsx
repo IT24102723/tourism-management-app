@@ -43,25 +43,27 @@ export default function PaymentScreen({ route, navigation }) {
       const payment_id = initRes.data.data.payment_id;
       await API.post(`/payments/${payment_id}/confirm`);
 
-      Alert.alert(
-        '🎉 Booking Confirmed!',
-        'Your Sri Lanka tour has been successfully booked. Have a wonderful trip! 🌴',
-        [{ text: 'View My Bookings', onPress: () => navigation.navigate('Main', { screen: 'Bookings' }) }]
-      );
+      if (Platform.OS === 'web') {
+        window.alert('🎉 Booking Confirmed! Your Sri Lanka tour has been successfully booked.');
+        navigation.navigate('Main', { screen: 'Bookings' });
+      } else {
+        Alert.alert(
+          '🎉 Booking Confirmed!',
+          'Your Sri Lanka tour has been successfully booked. Have a wonderful trip! 🌴',
+          [{ text: 'View My Bookings', onPress: () => navigation.navigate('Main', { screen: 'Bookings' }) }]
+        );
+      }
     } catch (e) {
       console.log(e.response?.data);
-      Alert.alert('Payment Error', e.response?.data?.message || 'Transaction failed. Please try again.');
+      const msg = e.response?.data?.message || 'Transaction failed. Please try again.';
+      if (Platform.OS === 'web') { window.alert('Payment Error: ' + msg); } else { Alert.alert('Payment Error', msg); }
     }
     setLoading(false);
   };
 
-  const webHeight = Platform.OS === 'web'
-    ? (typeof window !== 'undefined' ? window.innerHeight : SCREEN_HEIGHT)
-    : null;
-
   return (
-    <View style={Platform.OS === 'web' ? { height: webHeight, overflow: 'hidden', flex: 1 } : { flex: 1, backgroundColor: '#F5F7FA' }}>
-      <ScrollView style={styles.container} contentContainerStyle={{ flexGrow: 1, paddingBottom: 120 }} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={true}>
+    <ScrollView
+        style={[styles.container, Platform.OS === 'web' && { height: '100vh' }]} contentContainerStyle={{ flexGrow: 1, paddingBottom: 120 }} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={true}>
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backBtn}>
@@ -238,7 +240,7 @@ export default function PaymentScreen({ route, navigation }) {
 
       <View style={{ height: 40 }} />
       </ScrollView>
-    </View>
+    
   );
 }
 

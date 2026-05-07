@@ -80,17 +80,13 @@ export default function PackageBookingScreen({ route, navigation }) {
     setLoading(false);
   };
 
-  const webHeight = Platform.OS === 'web'
-    ? (typeof window !== 'undefined' ? window.innerHeight : SCREEN_HEIGHT)
-    : null;
-
   return (
     <KeyboardAvoidingView
       style={Platform.OS === 'web' ? { height: webHeight, overflow: 'hidden', flex: 1 } : { flex: 1 }}
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
-      <ScrollView 
-        style={styles.container} 
+      <ScrollView
+        style={[styles.container, Platform.OS === 'web' && { height: '100vh' }]} 
         contentContainerStyle={{ flexGrow: 1, paddingBottom: 120 }} 
         keyboardShouldPersistTaps="handled" 
         showsVerticalScrollIndicator={true}

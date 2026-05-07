@@ -73,13 +73,9 @@ export default function AdminDashboardScreen({ navigation }) {
     }
   };
 
-  const webHeight = Platform.OS === 'web'
-    ? (typeof window !== 'undefined' ? window.innerHeight : SCREEN_HEIGHT)
-    : null;
-
   return (
-    <View style={Platform.OS === 'web' ? { height: webHeight, overflow: 'hidden', flex: 1 } : { flex: 1, backgroundColor: '#F5F7FA' }}>
-      <ScrollView style={styles.container} contentContainerStyle={{ flexGrow: 1, paddingBottom: 100 }} showsVerticalScrollIndicator={true}>
+    <ScrollView
+        style={[styles.container, Platform.OS === 'web' && { height: '100vh' }]} contentContainerStyle={{ flexGrow: 1, paddingBottom: 100 }} showsVerticalScrollIndicator={true}>
       <View style={styles.header}>
         <View style={styles.headerRow}>
           <View>
@@ -137,7 +133,7 @@ export default function AdminDashboardScreen({ navigation }) {
         </>
       )}
       </ScrollView>
-    </View>
+    
   );
 }
 

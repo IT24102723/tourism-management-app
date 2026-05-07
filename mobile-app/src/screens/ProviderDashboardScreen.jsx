@@ -67,7 +67,7 @@ export default function ProviderDashboardScreen({ navigation }) {
 
   return (
     <ScrollView
-      style={styles.container}
+        style={[styles.container, Platform.OS === 'web' && { height: '100vh' }]}
       refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
     >
       <View style={styles.header}>

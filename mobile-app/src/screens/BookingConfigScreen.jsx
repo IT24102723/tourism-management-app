@@ -61,10 +61,6 @@ export default function BookingConfigScreen({ route, navigation }) {
     </View>
   );
 
-  const webHeight = Platform.OS === 'web'
-    ? (typeof window !== 'undefined' ? window.innerHeight : SCREEN_HEIGHT)
-    : null;
-
   return (
     <View style={Platform.OS === 'web' ? { height: webHeight, overflow: 'hidden', backgroundColor: '#F5F7FA' } : styles.container}>
       <View style={styles.header}>

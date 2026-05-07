@@ -39,13 +39,9 @@ export default function ProviderDetailScreen({ route, navigation }) {
 
   const imageUri = resolveImageUrl(provider.image_url);
 
-  const webHeight = Platform.OS === 'web'
-    ? (typeof window !== 'undefined' ? window.innerHeight : SCREEN_HEIGHT)
-    : null;
-
   return (
-    <View style={Platform.OS === 'web' ? { height: webHeight, overflow: 'hidden', flex: 1 } : { flex: 1 }}>
-      <ScrollView style={styles.container} contentContainerStyle={{ flexGrow: 1, paddingBottom: 120 }} showsVerticalScrollIndicator={true}>
+    <ScrollView
+        style={[styles.container, Platform.OS === 'web' && { height: '100vh' }]} contentContainerStyle={{ flexGrow: 1, paddingBottom: 120 }} showsVerticalScrollIndicator={true}>
       {/* Header Image */}
       <View style={styles.imageHeader}>
         {imageUri ? (
@@ -127,7 +123,7 @@ export default function ProviderDetailScreen({ route, navigation }) {
         </View>
       </View>
       </ScrollView>
-    </View>
+    
   );
 }
 

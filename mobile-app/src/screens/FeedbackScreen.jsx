@@ -90,13 +90,9 @@ export default function FeedbackScreen({ route, navigation }) {
     setLoading(false);
   };
 
-  const webHeight = Platform.OS === 'web'
-    ? (typeof window !== 'undefined' ? window.innerHeight : SCREEN_HEIGHT)
-    : null;
-
   return (
-    <View style={Platform.OS === 'web' ? { height: webHeight, overflow: 'hidden', flex: 1 } : { flex: 1, backgroundColor: '#fff' }}>
-      <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: 40 }} showsVerticalScrollIndicator={true}>
+    <ScrollView
+        style={[styles.container, Platform.OS === 'web' && { height: '100vh' }]} contentContainerStyle={{ paddingBottom: 40 }} showsVerticalScrollIndicator={true}>
       <StatusBar barStyle="light-content" />
       <LinearGradient colors={['#0D5F8A', '#2E86AB']} style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backBtn}>
@@ -201,7 +197,7 @@ export default function FeedbackScreen({ route, navigation }) {
       </View>
       </View>
       </ScrollView>
-    </View>
+    
   );
 }
 
