@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import {
   View, Text, TextInput, StyleSheet, TouchableOpacity,
-  ScrollView, Alert, ActivityIndicator, KeyboardAvoidingView, Platform, Image
+  ScrollView, Alert, ActivityIndicator, KeyboardAvoidingView, Platform, Image, Dimensions
 } from 'react-native';
 import API from '../services/api';
 import { useFocusEffect } from '@react-navigation/native';
 import { resolveImageUrl } from '../utils/imageUtils';
+
+const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 
 export default function PackageBookingScreen({ route, navigation }) {
   const { package_id, package_title, price_per_person, duration_days } = route.params;
@@ -78,18 +80,20 @@ export default function PackageBookingScreen({ route, navigation }) {
     setLoading(false);
   };
 
+  const webHeight = Platform.OS === 'web'
+    ? (typeof window !== 'undefined' ? window.innerHeight : SCREEN_HEIGHT)
+    : null;
+
   return (
     <KeyboardAvoidingView
-      style={{ flex: 1 }}
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
+      style={Platform.OS === 'web' ? { height: webHeight, overflow: 'hidden' } : { flex: 1 }}
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
       <ScrollView 
         style={styles.container} 
         contentContainerStyle={{ flexGrow: 1, paddingBottom: 120 }} 
         keyboardShouldPersistTaps="handled" 
-        keyboardDismissMode="on-drag" 
-        nestedScrollEnabled={true}
+        showsVerticalScrollIndicator={true}
       >
 
         {/* Header */}

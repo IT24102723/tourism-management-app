@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import {
   View, Text, StyleSheet, TouchableOpacity,
-  ScrollView, ActivityIndicator, Alert,
+  ScrollView, ActivityIndicator, Alert, Platform, Dimensions,
 } from 'react-native';
 import API from '../services/api';
+
+const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 
 const vehicleEmoji = { Bus: '🚌', Van: '🚐', Jeep: '🚙', Car: '🚗', Truck: '🚚' };
 
@@ -116,8 +118,12 @@ export default function TransportSelectionScreen({ route, navigation }) {
 
   const totalIfBooked = safeBaseAmount + transportEstimate;
 
+  const webHeight = Platform.OS === 'web'
+    ? (typeof window !== 'undefined' ? window.innerHeight : SCREEN_HEIGHT)
+    : null;
+
   return (
-    <View style={styles.container}>
+    <View style={Platform.OS === 'web' ? { height: webHeight, overflow: 'hidden', backgroundColor: '#F5F7FA' } : styles.container}>
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backBtn}>
@@ -128,7 +134,7 @@ export default function TransportSelectionScreen({ route, navigation }) {
         <Text style={styles.headerSub}>Choose a vehicle and route, or skip</Text>
       </View>
 
-      <ScrollView contentContainerStyle={{ flexGrow: 1, paddingBottom: 150 }} keyboardShouldPersistTaps="handled">
+      <ScrollView contentContainerStyle={{ flexGrow: 1, paddingBottom: 150 }} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={true}>
         {/* Booking recap */}
         <View style={styles.recap}>
           <Text style={styles.recapTitle}>{package_title}</Text>

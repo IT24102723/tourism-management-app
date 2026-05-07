@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import {
   View, Text, StyleSheet, TouchableOpacity,
-  ScrollView, ActivityIndicator, Alert,
+  ScrollView, ActivityIndicator, Alert, Platform, Dimensions,
 } from 'react-native';
 import API from '../services/api';
+
+const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 
 const STATUS_COLOR = {
   Confirmed:  '#27AE60',
@@ -93,8 +95,13 @@ export default function BookingDetailScreen({ route, navigation }) {
   const statusColor = STATUS_COLOR[booking.booking_status] || '#333';
   const statusBg    = STATUS_BG[booking.booking_status]    || '#F5F5F5';
 
+  const webHeight = Platform.OS === 'web'
+    ? (typeof window !== 'undefined' ? window.innerHeight : SCREEN_HEIGHT)
+    : null;
+
   return (
-    <ScrollView style={styles.container} contentContainerStyle={{ flexGrow: 1, paddingBottom: 120 }}>
+    <View style={Platform.OS === 'web' ? { height: webHeight, overflow: 'hidden' } : { flex: 1 }}>
+      <ScrollView style={styles.container} contentContainerStyle={{ flexGrow: 1, paddingBottom: 120 }} showsVerticalScrollIndicator={true}>
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backBtn}>
@@ -256,7 +263,8 @@ export default function BookingDetailScreen({ route, navigation }) {
           </TouchableOpacity>
         </View>
       )}
-    </ScrollView>
+      </ScrollView>
+    </View>
   );
 }
 

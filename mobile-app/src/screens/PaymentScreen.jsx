@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import {
   View, Text, StyleSheet, TouchableOpacity, ScrollView,
-  ActivityIndicator, Alert, TextInput,
+  ActivityIndicator, Alert, TextInput, Platform, Dimensions,
 } from 'react-native';
 import API from '../services/api';
+
+const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 
 export default function PaymentScreen({ route, navigation }) {
   const {
@@ -53,8 +55,13 @@ export default function PaymentScreen({ route, navigation }) {
     setLoading(false);
   };
 
+  const webHeight = Platform.OS === 'web'
+    ? (typeof window !== 'undefined' ? window.innerHeight : SCREEN_HEIGHT)
+    : null;
+
   return (
-    <ScrollView style={styles.container} contentContainerStyle={{ flexGrow: 1, paddingBottom: 80 }} keyboardShouldPersistTaps="handled" keyboardDismissMode="on-drag">
+    <View style={Platform.OS === 'web' ? { height: webHeight, overflow: 'hidden' } : { flex: 1, backgroundColor: '#F5F7FA' }}>
+      <ScrollView style={styles.container} contentContainerStyle={{ flexGrow: 1, paddingBottom: 120 }} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={true}>
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backBtn}>
@@ -228,7 +235,10 @@ export default function PaymentScreen({ route, navigation }) {
             </>
         }
       </TouchableOpacity>
-    </ScrollView>
+
+      <View style={{ height: 40 }} />
+      </ScrollView>
+    </View>
   );
 }
 

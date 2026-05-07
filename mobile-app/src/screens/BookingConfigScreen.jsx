@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { 
   View, Text, StyleSheet, TouchableOpacity, ScrollView, 
-  ActivityIndicator, Alert, RefreshControl 
+  ActivityIndicator, Alert, RefreshControl, Platform, Dimensions
 } from 'react-native';
 import API from '../services/api';
+
+const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 
 export default function BookingConfigScreen({ route, navigation }) {
   const { 
@@ -59,8 +61,12 @@ export default function BookingConfigScreen({ route, navigation }) {
     </View>
   );
 
+  const webHeight = Platform.OS === 'web'
+    ? (typeof window !== 'undefined' ? window.innerHeight : SCREEN_HEIGHT)
+    : null;
+
   return (
-    <View style={styles.container}>
+    <View style={Platform.OS === 'web' ? { height: webHeight, overflow: 'hidden', backgroundColor: '#F5F7FA' } : styles.container}>
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backBtn}>
           <Text style={styles.backText}>← Back</Text>
@@ -70,7 +76,7 @@ export default function BookingConfigScreen({ route, navigation }) {
         <Text style={styles.headerSub}>Choose a travel plan or skip for default</Text>
       </View>
 
-      <ScrollView contentContainerStyle={{ flexGrow: 1, padding: 20, paddingBottom: 150 }} keyboardShouldPersistTaps="handled">
+      <ScrollView contentContainerStyle={{ flexGrow: 1, padding: 20, paddingBottom: 150 }} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={true}>
         <Text style={styles.sectionTitle}>Available Schedules</Text>
         {schedules.length === 0 ? (
           <View style={styles.emptyBox}>

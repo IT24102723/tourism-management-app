@@ -1,14 +1,14 @@
 import React, { useState, useEffect, useContext } from 'react';
 import {
   View, Text, StyleSheet, ActivityIndicator, ScrollView,
-  TouchableOpacity, Image,
+  TouchableOpacity, Image, Platform, Dimensions,
 } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
 import API from '../services/api';
 import { getPrimaryImage } from '../utils/imageUtils';
 import { AuthContext } from '../context/AuthContext';
 
-// Sri Lanka package hero images mapped by type
+const { height: SCREEN_HEIGHT } = Dimensions.get('window');
+
 const HERO_IMAGES = {
   Leisure:   'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=900&auto=format&fit=crop',
   Adventure: 'https://images.unsplash.com/photo-1586185862378-3e3e49e98073?w=900&auto=format&fit=crop',
@@ -55,117 +55,133 @@ export default function PackageDetailScreen({ route, navigation }) {
   const heroUri   = getPrimaryImage(pkg) || HERO_IMAGES[pkg.package_type] || HERO_IMAGES.default;
   const typeColor = TYPE_COLORS[pkg.package_type] || '#0D5F8A';
 
+  // On web: use window height so ScrollView has a bounded container to scroll inside
+  const containerStyle = Platform.OS === 'web'
+    ? { height: typeof window !== 'undefined' ? window.innerHeight : SCREEN_HEIGHT, overflow: 'hidden' }
+    : { flex: 1 };
+
   return (
-    <ScrollView style={styles.container} contentContainerStyle={{ flexGrow: 1, paddingBottom: 100 }}>
-      {/* Hero */}
-      <View style={styles.heroWrap}>
-        <Image source={{ uri: heroUri }} style={styles.heroImage} />
-        <View style={styles.heroOverlay} />
-        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backBtn}>
-          <Text style={styles.backText}>← Back</Text>
-        </TouchableOpacity>
-        <View style={styles.heroContent}>
-          <View style={[styles.typeBadge, { backgroundColor: typeColor }]}>
-            <Text style={styles.typeText}>{pkg.package_type} Tour • 🇱🇰 Sri Lanka</Text>
+    <View style={[styles.outerContainer, containerStyle]}>
+      <ScrollView
+        style={styles.scrollView}
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={true}
+      >
+        {/* Hero */}
+        <View style={styles.heroWrap}>
+          <Image source={{ uri: heroUri }} style={styles.heroImage} />
+          <View style={styles.heroOverlay} />
+          <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backBtn}>
+            <Text style={styles.backText}>← Back</Text>
+          </TouchableOpacity>
+          <View style={styles.heroContent}>
+            <View style={[styles.typeBadge, { backgroundColor: typeColor }]}>
+              <Text style={styles.typeText}>{pkg.package_type} Tour • 🇱🇰 Sri Lanka</Text>
+            </View>
+            <Text style={styles.heroTitle}>{pkg.title || pkg.name}</Text>
+            <Text style={styles.heroPrice}>LKR {Number(pkg.price_per_person || pkg.price || 0).toLocaleString()} / person</Text>
           </View>
-          <Text style={styles.heroTitle}>{pkg.title || pkg.name}</Text>
-          <Text style={styles.heroPrice}>LKR {Number(pkg.price_per_person || pkg.price || 0).toLocaleString()} / person</Text>
         </View>
-      </View>
 
-      {/* Quick Info */}
-      <View style={styles.infoRow}>
-        <View style={styles.infoItem}>
-          <Text style={styles.infoIcon}>⏱</Text>
-          <Text style={styles.infoVal}>{pkg.duration_days} Days</Text>
-          <Text style={styles.infoLabel}>Duration</Text>
+        {/* Quick Info */}
+        <View style={styles.infoRow}>
+          <View style={styles.infoItem}>
+            <Text style={styles.infoIcon}>⏱</Text>
+            <Text style={styles.infoVal}>{pkg.duration_days} Days</Text>
+            <Text style={styles.infoLabel}>Duration</Text>
+          </View>
+          <View style={styles.infoDiv} />
+          <View style={styles.infoItem}>
+            <Text style={styles.infoIcon}>👥</Text>
+            <Text style={styles.infoVal}>Group</Text>
+            <Text style={styles.infoLabel}>Tour Type</Text>
+          </View>
+          <View style={styles.infoDiv} />
+          <View style={styles.infoItem}>
+            <Text style={styles.infoIcon}>🌴</Text>
+            <Text style={styles.infoVal}>Sri Lanka</Text>
+            <Text style={styles.infoLabel}>Destination</Text>
+          </View>
+          <View style={styles.infoDiv} />
+          <View style={styles.infoItem}>
+            <Text style={styles.infoIcon}>{pkg.is_active ? '✅' : '⛔'}</Text>
+            <Text style={[styles.infoVal, { color: pkg.is_active ? '#27AE60' : '#E74C3C' }]}>
+              {pkg.is_active ? 'Available' : 'Unavailable'}
+            </Text>
+            <Text style={styles.infoLabel}>Status</Text>
+          </View>
         </View>
-        <View style={styles.infoDiv} />
-        <View style={styles.infoItem}>
-          <Text style={styles.infoIcon}>👥</Text>
-          <Text style={styles.infoVal}>Group</Text>
-          <Text style={styles.infoLabel}>Tour Type</Text>
-        </View>
-        <View style={styles.infoDiv} />
-        <View style={styles.infoItem}>
-          <Text style={styles.infoIcon}>🌴</Text>
-          <Text style={styles.infoVal}>Sri Lanka</Text>
-          <Text style={styles.infoLabel}>Destination</Text>
-        </View>
-        <View style={styles.infoDiv} />
-        <View style={styles.infoItem}>
-          <Text style={styles.infoIcon}>{pkg.is_active ? '✅' : '⛔'}</Text>
-          <Text style={[styles.infoVal, { color: pkg.is_active ? '#27AE60' : '#E74C3C' }]}>
-            {pkg.is_active ? 'Available' : 'Unavailable'}
-          </Text>
-          <Text style={styles.infoLabel}>Status</Text>
-        </View>
-      </View>
 
-      {/* Description */}
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>About This Package</Text>
-        <Text style={styles.desc}>{pkg.description || 'Explore the beautiful island of Sri Lanka with this curated tour package.'}</Text>
-      </View>
-
-      {/* Inclusions */}
-      {pkg.inclusions && (
+        {/* Description */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>✅ What's Included</Text>
-          <View style={styles.inclusionBox}>
-            <Text style={styles.inclusionText}>{pkg.inclusions}</Text>
-          </View>
+          <Text style={styles.sectionTitle}>About This Package</Text>
+          <Text style={styles.desc}>{pkg.description || 'Explore the beautiful island of Sri Lanka with this curated tour package.'}</Text>
         </View>
-      )}
 
-      {/* What to Expect / Itinerary */}
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>🗺️ Included Attractions</Text>
-        {pkg.itinerary && pkg.itinerary.length > 0 ? (
-          <View style={styles.itineraryGrid}>
-            {pkg.itinerary.map((item, i) => (
-              <View key={i} style={styles.itineraryItem}>
-                <View style={styles.dayBadge}>
-                  <Text style={styles.dayText}>Day {item.visit_day}</Text>
-                </View>
-                <View style={styles.itineraryContent}>
-                  <Text style={styles.itineraryName}>{item.name}</Text>
-                  <Text style={styles.itineraryCity}>{item.city}</Text>
-                </View>
-              </View>
-            ))}
-          </View>
-        ) : (
-          <View style={styles.highlightsGrid}>
-            {['Sigiriya Rock', 'Galle Fort', 'Temple of Tooth', 'Yala Safari', 'Ella Train', 'Mirissa Beach'].map((h, i) => (
-              <View key={i} style={styles.highlight}>
-                <Text style={styles.highlightText}>{h}</Text>
-              </View>
-            ))}
+        {/* Inclusions */}
+        {pkg.inclusions && (
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>✅ What's Included</Text>
+            <View style={styles.inclusionBox}>
+              <Text style={styles.inclusionText}>{pkg.inclusions}</Text>
+            </View>
           </View>
         )}
-      </View>
 
-      {/* CTA */}
-      {user?.role === 'Tourist' && (
-        <TouchableOpacity style={styles.bookBtn} onPress={handleBook} activeOpacity={0.85}>
-          <Text style={styles.bookBtnText}>🏷️  Book This Package</Text>
-          <Text style={styles.bookBtnSub}>Pick your Hotel, Guide & Transport in next steps</Text>
+        {/* Itinerary */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>🗺️ Included Attractions</Text>
+          {pkg.itinerary && pkg.itinerary.length > 0 ? (
+            <View style={styles.itineraryGrid}>
+              {pkg.itinerary.map((item, i) => (
+                <View key={i} style={styles.itineraryItem}>
+                  <View style={styles.dayBadge}>
+                    <Text style={styles.dayText}>Day {item.visit_day}</Text>
+                  </View>
+                  <View style={styles.itineraryContent}>
+                    <Text style={styles.itineraryName}>{item.name}</Text>
+                    <Text style={styles.itineraryCity}>{item.city}</Text>
+                  </View>
+                </View>
+              ))}
+            </View>
+          ) : (
+            <View style={styles.highlightsGrid}>
+              {['Sigiriya Rock', 'Galle Fort', 'Temple of Tooth', 'Yala Safari', 'Ella Train', 'Mirissa Beach'].map((h, i) => (
+                <View key={i} style={styles.highlight}>
+                  <Text style={styles.highlightText}>{h}</Text>
+                </View>
+              ))}
+            </View>
+          )}
+        </View>
+
+        {/* Book Button — ALWAYS VISIBLE for Tourist */}
+        {user?.role === 'Tourist' && (
+          <TouchableOpacity style={styles.bookBtn} onPress={handleBook} activeOpacity={0.85}>
+            <Text style={styles.bookBtnText}>🏷️  Book This Package</Text>
+            <Text style={styles.bookBtnSub}>Pick your Hotel, Guide & Transport in next steps</Text>
+          </TouchableOpacity>
+        )}
+
+        <TouchableOpacity
+          style={styles.feedbackBtn}
+          onPress={() => navigation.navigate('Feedback', { target_type: 'Package', target_id: id })}
+        >
+          <Text style={styles.feedbackBtnText}>⭐  Leave a Review</Text>
         </TouchableOpacity>
-      )}
 
-      <TouchableOpacity
-        style={styles.feedbackBtn}
-        onPress={() => navigation.navigate('Feedback', { target_type: 'Package', target_id: id })}
-      >
-        <Text style={styles.feedbackBtnText}>⭐  Leave a Review</Text>
-      </TouchableOpacity>
-    </ScrollView>
+        {/* Extra bottom space */}
+        <View style={{ height: 60 }} />
+      </ScrollView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#F5F7FA' },
+  outerContainer: { backgroundColor: '#F5F7FA' },
+  scrollView:     { flex: 1 },
+  scrollContent:  { flexGrow: 1, paddingBottom: 40 },
 
   // Hero
   heroWrap:    { height: 300, position: 'relative' },
@@ -237,29 +253,20 @@ const styles = StyleSheet.create({
     paddingVertical: 14, alignItems: 'center',
   },
   feedbackBtnText: { color: '#0D5F8A', fontWeight: '700', fontSize: 15 },
-  
+
   // Itinerary
   itineraryGrid: { gap: 10 },
   itineraryItem: {
-    flexDirection: 'row',
-    backgroundColor: '#fff',
-    borderRadius: 12,
-    padding: 12,
-    alignItems: 'center',
-    elevation: 1,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
+    flexDirection: 'row', backgroundColor: '#fff', borderRadius: 12,
+    padding: 12, alignItems: 'center', elevation: 1,
+    shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.05,
   },
   dayBadge: {
-    backgroundColor: '#0D5F8A',
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-    borderRadius: 8,
-    marginRight: 15,
+    backgroundColor: '#0D5F8A', paddingHorizontal: 10,
+    paddingVertical: 5, borderRadius: 8, marginRight: 15,
   },
-  dayText: { color: '#fff', fontSize: 11, fontWeight: 'bold' },
-  itineraryContent: { flex: 1 },
-  itineraryName: { fontSize: 15, fontWeight: 'bold', color: '#333', marginBottom: 2 },
-  itineraryCity: { fontSize: 12, color: '#666' },
+  dayText:         { color: '#fff', fontSize: 11, fontWeight: 'bold' },
+  itineraryContent:{ flex: 1 },
+  itineraryName:   { fontSize: 15, fontWeight: 'bold', color: '#333', marginBottom: 2 },
+  itineraryCity:   { fontSize: 12, color: '#666' },
 });
