@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { View, Text, StyleSheet, ActivityIndicator, ScrollView, TouchableOpacity, Alert, Image, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, ActivityIndicator, ScrollView, TouchableOpacity, Alert, Image, Dimensions, Platform } from 'react-native';
+
+const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 import API from '../services/api';
 import { AuthContext } from '../context/AuthContext';
 import { getPrimaryImage } from '../utils/imageUtils';
@@ -67,12 +69,17 @@ export default function AttractionDetailScreen({ route, navigation }) {
     Under_Maintenance: '#95A5A6'
   };
 
+  const webHeight = Platform.OS === 'web'
+    ? (typeof window !== 'undefined' ? window.innerHeight : SCREEN_HEIGHT)
+    : null;
+
   return (
-    <ScrollView 
-      style={styles.container} 
-      contentContainerStyle={{ flexGrow: 1, paddingBottom: 40 }}
-      showsVerticalScrollIndicator={false}
-    >
+    <View style={Platform.OS === 'web' ? { height: webHeight, overflow: 'hidden' } : { flex: 1, backgroundColor: '#F5F7FA' }}>
+      <ScrollView 
+        style={styles.container} 
+        contentContainerStyle={{ flexGrow: 1, paddingBottom: 80 }}
+        showsVerticalScrollIndicator={true}
+      >
       {/* Header Image */}
       <View style={styles.imageContainer}>
         <Image
@@ -193,7 +200,8 @@ export default function AttractionDetailScreen({ route, navigation }) {
           </TouchableOpacity>
         </View>
       </View>
-    </ScrollView>
+      </ScrollView>
+    </View>
   );
 }
 

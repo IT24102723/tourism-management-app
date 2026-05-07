@@ -1,9 +1,11 @@
 import React, { useContext, useState } from 'react';
 import {
   View, Text, StyleSheet, TouchableOpacity, Alert, Image,
-  ActivityIndicator, Modal, TextInput, ScrollView, Platform
+  ActivityIndicator, Modal, TextInput, ScrollView, Platform, Dimensions
 } from 'react-native';
 import { AuthContext } from '../context/AuthContext';
+
+const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 import API from '../services/api';
 import { pickImage, uploadImage } from '../services/upload.service';
 import { resolveImageUrl } from '../utils/imageUtils';
@@ -70,8 +72,13 @@ export default function ProfileScreen({ navigation }) {
 
   const profileUri = resolveImageUrl(user?.profile_image);
 
+  const webHeight = Platform.OS === 'web'
+    ? (typeof window !== 'undefined' ? window.innerHeight : SCREEN_HEIGHT)
+    : null;
+
   return (
-    <ScrollView style={styles.container} contentContainerStyle={{ flexGrow: 1, paddingBottom: 80 }}>
+    <View style={Platform.OS === 'web' ? { height: webHeight, overflow: 'hidden' } : { flex: 1, backgroundColor: '#f0f4f8' }}>
+      <ScrollView style={styles.container} contentContainerStyle={{ flexGrow: 1, paddingBottom: 80 }} showsVerticalScrollIndicator={true}>
       <View style={styles.header}>
         <TouchableOpacity style={styles.avatarContainer} onPress={handlePickImage} disabled={uploading}>
           {profileUri ? (
@@ -165,8 +172,10 @@ export default function ProfileScreen({ navigation }) {
             </View>
           </View>
         </View>
+        </View>
       </Modal>
-    </ScrollView>
+      </ScrollView>
+    </View>
   );
 }
 

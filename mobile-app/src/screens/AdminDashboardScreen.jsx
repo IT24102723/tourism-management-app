@@ -1,8 +1,10 @@
 import React, { useState, useEffect, useContext } from 'react';
 import {
   View, Text, StyleSheet, ScrollView, TouchableOpacity,
-  ActivityIndicator, Alert, Platform
+  ActivityIndicator, Alert, Platform, Dimensions
 } from 'react-native';
+
+const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 import API from '../services/api';
 import { AuthContext } from '../context/AuthContext';
 
@@ -71,8 +73,13 @@ export default function AdminDashboardScreen({ navigation }) {
     }
   };
 
+  const webHeight = Platform.OS === 'web'
+    ? (typeof window !== 'undefined' ? window.innerHeight : SCREEN_HEIGHT)
+    : null;
+
   return (
-    <ScrollView style={styles.container} contentContainerStyle={{ flexGrow: 1, paddingBottom: 100 }}>
+    <View style={Platform.OS === 'web' ? { height: webHeight, overflow: 'hidden' } : { flex: 1, backgroundColor: '#F5F7FA' }}>
+      <ScrollView style={styles.container} contentContainerStyle={{ flexGrow: 1, paddingBottom: 100 }} showsVerticalScrollIndicator={true}>
       <View style={styles.header}>
         <View style={styles.headerRow}>
           <View>
@@ -129,7 +136,8 @@ export default function AdminDashboardScreen({ navigation }) {
           </View>
         </>
       )}
-    </ScrollView>
+      </ScrollView>
+    </View>
   );
 }
 

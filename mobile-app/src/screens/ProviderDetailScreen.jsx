@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import {
   View, Text, StyleSheet, ScrollView, Image, TouchableOpacity,
-  ActivityIndicator, Linking, Alert
+  ActivityIndicator, Linking, Alert, Platform, Dimensions,
 } from 'react-native';
 import API from '../services/api';
 import { resolveImageUrl } from '../utils/imageUtils';
+
+const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 
 export default function ProviderDetailScreen({ route, navigation }) {
   const { id } = route.params;
@@ -37,8 +39,13 @@ export default function ProviderDetailScreen({ route, navigation }) {
 
   const imageUri = resolveImageUrl(provider.image_url);
 
+  const webHeight = Platform.OS === 'web'
+    ? (typeof window !== 'undefined' ? window.innerHeight : SCREEN_HEIGHT)
+    : null;
+
   return (
-    <ScrollView style={styles.container} contentContainerStyle={{ flexGrow: 1, paddingBottom: 120 }}>
+    <View style={Platform.OS === 'web' ? { height: webHeight, overflow: 'hidden' } : { flex: 1 }}>
+      <ScrollView style={styles.container} contentContainerStyle={{ flexGrow: 1, paddingBottom: 120 }} showsVerticalScrollIndicator={true}>
       {/* Header Image */}
       <View style={styles.imageHeader}>
         {imageUri ? (
@@ -119,7 +126,8 @@ export default function ProviderDetailScreen({ route, navigation }) {
           </TouchableOpacity>
         </View>
       </View>
-    </ScrollView>
+      </ScrollView>
+    </View>
   );
 }
 

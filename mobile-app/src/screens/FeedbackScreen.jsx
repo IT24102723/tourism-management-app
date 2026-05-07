@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { 
   View, Text, TextInput, TouchableOpacity, StyleSheet, 
-  Alert, ScrollView, ActivityIndicator, StatusBar, FlatList 
+  Alert, ScrollView, ActivityIndicator, StatusBar, FlatList, Platform, Dimensions 
 } from 'react-native';
+
+const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 import API from '../services/api';
 import { LinearGradient } from 'expo-linear-gradient';
 
@@ -88,8 +90,13 @@ export default function FeedbackScreen({ route, navigation }) {
     setLoading(false);
   };
 
+  const webHeight = Platform.OS === 'web'
+    ? (typeof window !== 'undefined' ? window.innerHeight : SCREEN_HEIGHT)
+    : null;
+
   return (
-    <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: 40 }}>
+    <View style={Platform.OS === 'web' ? { height: webHeight, overflow: 'hidden' } : { flex: 1, backgroundColor: '#fff' }}>
+      <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: 40 }} showsVerticalScrollIndicator={true}>
       <StatusBar barStyle="light-content" />
       <LinearGradient colors={['#0D5F8A', '#2E86AB']} style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backBtn}>
@@ -192,7 +199,9 @@ export default function FeedbackScreen({ route, navigation }) {
           )}
         </TouchableOpacity>
       </View>
-    </ScrollView>
+      </View>
+      </ScrollView>
+    </View>
   );
 }
 
