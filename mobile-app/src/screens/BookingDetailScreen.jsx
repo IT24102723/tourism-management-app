@@ -100,7 +100,7 @@ export default function BookingDetailScreen({ route, navigation }) {
     : null;
 
   return (
-    <View style={Platform.OS === 'web' ? { height: webHeight, overflow: 'hidden' } : { flex: 1 }}>
+    <View style={Platform.OS === 'web' ? { height: webHeight, overflow: 'hidden', flex: 1 } : { flex: 1 }}>
       <ScrollView style={styles.container} contentContainerStyle={{ flexGrow: 1, paddingBottom: 120 }} showsVerticalScrollIndicator={true}>
       {/* Header */}
       <View style={styles.header}>

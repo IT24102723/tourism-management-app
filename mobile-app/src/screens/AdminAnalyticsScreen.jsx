@@ -39,7 +39,7 @@ export default function AdminAnalyticsScreen() {
     : null;
 
   return (
-    <View style={Platform.OS === 'web' ? { height: webHeight, overflow: 'hidden' } : { flex: 1, backgroundColor: '#F5F7FA' }}>
+    <View style={Platform.OS === 'web' ? { height: webHeight, overflow: 'hidden', flex: 1 } : { flex: 1, backgroundColor: '#F5F7FA' }}>
       <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: 40 }} showsVerticalScrollIndicator={true}>
       <View style={styles.header}>
         <Text style={styles.headerTitle}>📊 Business Analytics</Text>

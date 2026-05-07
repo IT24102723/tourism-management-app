@@ -77,7 +77,7 @@ export default function ProfileScreen({ navigation }) {
     : null;
 
   return (
-    <View style={Platform.OS === 'web' ? { height: webHeight, overflow: 'hidden' } : { flex: 1, backgroundColor: '#f0f4f8' }}>
+    <View style={Platform.OS === 'web' ? { height: webHeight, overflow: 'hidden', flex: 1 } : { flex: 1, backgroundColor: '#f0f4f8' }}>
       <ScrollView style={styles.container} contentContainerStyle={{ flexGrow: 1, paddingBottom: 80 }} showsVerticalScrollIndicator={true}>
       <View style={styles.header}>
         <TouchableOpacity style={styles.avatarContainer} onPress={handlePickImage} disabled={uploading}>

@@ -78,7 +78,7 @@ export default function AdminDashboardScreen({ navigation }) {
     : null;
 
   return (
-    <View style={Platform.OS === 'web' ? { height: webHeight, overflow: 'hidden' } : { flex: 1, backgroundColor: '#F5F7FA' }}>
+    <View style={Platform.OS === 'web' ? { height: webHeight, overflow: 'hidden', flex: 1 } : { flex: 1, backgroundColor: '#F5F7FA' }}>
       <ScrollView style={styles.container} contentContainerStyle={{ flexGrow: 1, paddingBottom: 100 }} showsVerticalScrollIndicator={true}>
       <View style={styles.header}>
         <View style={styles.headerRow}>

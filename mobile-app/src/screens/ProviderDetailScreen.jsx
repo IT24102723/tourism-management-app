@@ -44,7 +44,7 @@ export default function ProviderDetailScreen({ route, navigation }) {
     : null;
 
   return (
-    <View style={Platform.OS === 'web' ? { height: webHeight, overflow: 'hidden' } : { flex: 1 }}>
+    <View style={Platform.OS === 'web' ? { height: webHeight, overflow: 'hidden', flex: 1 } : { flex: 1 }}>
       <ScrollView style={styles.container} contentContainerStyle={{ flexGrow: 1, paddingBottom: 120 }} showsVerticalScrollIndicator={true}>
       {/* Header Image */}
       <View style={styles.imageHeader}>

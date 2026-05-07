@@ -60,7 +60,7 @@ export default function PaymentScreen({ route, navigation }) {
     : null;
 
   return (
-    <View style={Platform.OS === 'web' ? { height: webHeight, overflow: 'hidden' } : { flex: 1, backgroundColor: '#F5F7FA' }}>
+    <View style={Platform.OS === 'web' ? { height: webHeight, overflow: 'hidden', flex: 1 } : { flex: 1, backgroundColor: '#F5F7FA' }}>
       <ScrollView style={styles.container} contentContainerStyle={{ flexGrow: 1, paddingBottom: 120 }} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={true}>
       {/* Header */}
       <View style={styles.header}>

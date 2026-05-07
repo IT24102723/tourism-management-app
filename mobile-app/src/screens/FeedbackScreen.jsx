@@ -95,7 +95,7 @@ export default function FeedbackScreen({ route, navigation }) {
     : null;
 
   return (
-    <View style={Platform.OS === 'web' ? { height: webHeight, overflow: 'hidden' } : { flex: 1, backgroundColor: '#fff' }}>
+    <View style={Platform.OS === 'web' ? { height: webHeight, overflow: 'hidden', flex: 1 } : { flex: 1, backgroundColor: '#fff' }}>
       <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: 40 }} showsVerticalScrollIndicator={true}>
       <StatusBar barStyle="light-content" />
       <LinearGradient colors={['#0D5F8A', '#2E86AB']} style={styles.header}>
