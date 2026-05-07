@@ -169,7 +169,7 @@ export default function BookingsScreen({ navigation }) {
         <FlatList
           data={bookings}
           keyExtractor={item => String(item.booking_id)}
-          contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 30, paddingTop: 16 }}
+          contentContainerStyle={{ flexGrow: 1, paddingHorizontal: 16, paddingBottom: 100, paddingTop: 16 }}
           refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor="#0D5F8A" />}
           ListEmptyComponent={
             <View style={styles.emptyContainer}>

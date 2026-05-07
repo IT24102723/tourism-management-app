@@ -72,7 +72,7 @@ export default function AdminDashboardScreen({ navigation }) {
   };
 
   return (
-    <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: 40 }}>
+    <ScrollView style={styles.container} contentContainerStyle={{ flexGrow: 1, paddingBottom: 100 }}>
       <View style={styles.header}>
         <View style={styles.headerRow}>
           <View>

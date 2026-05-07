@@ -118,8 +118,8 @@ export default function ProvidersScreen({ navigation }) {
         {loading ? <ActivityIndicator size="large" color="#0D5F8A" style={{ marginTop: 50 }} /> : (
           <FlatList 
             data={filtered} 
-            keyExtractor={item => String(item.provider_id)}
-            contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: 100 }}
+            keyExtractor={item => String(item.provider_id || item.id || Math.random())}
+            contentContainerStyle={{ flexGrow: 1, paddingHorizontal: 20, paddingBottom: 100 }}
             renderItem={renderProviderCard}
             refreshing={refreshing}
             onRefresh={fetchProviders}

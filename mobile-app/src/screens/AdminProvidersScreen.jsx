@@ -166,8 +166,8 @@ export default function AdminProvidersScreen({ navigation }) {
       {loading ? <ActivityIndicator size="large" color="#0D5F8A" style={{ marginTop: 40 }} /> : (
         <FlatList
           data={filtered}
-          keyExtractor={i => String(i.provider_id)}
-          contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 30 }}
+          keyExtractor={i => String(i.provider_id || i.id || Math.random())}
+          contentContainerStyle={{ flexGrow: 1, paddingHorizontal: 16, paddingBottom: 30 }}
           renderItem={({ item }) => (
             <View style={styles.card}>
               <View style={styles.cardRow}>
