@@ -74,7 +74,7 @@ export default function ProfileScreen({ navigation }) {
 
   return (
     <ScrollView
-        style={[styles.container, Platform.OS === 'web' && { height: '100vh' }]} contentContainerStyle={{ flexGrow: 1, paddingBottom: 80 }} showsVerticalScrollIndicator={true}>
+        style={styles.container} contentContainerStyle={{ flexGrow: 1, paddingBottom: 80 }} showsVerticalScrollIndicator={true}>
       <View style={styles.header}>
         <TouchableOpacity style={styles.avatarContainer} onPress={handlePickImage} disabled={uploading}>
           {profileUri ? (

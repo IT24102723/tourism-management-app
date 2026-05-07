@@ -7,12 +7,10 @@ if (Platform.OS === 'web') {
   const style = document.createElement('style');
   style.textContent = `
     html, body, #root {
-      height: 100%;
+      min-height: 100vh;
       width: 100%;
-      overflow-y: hidden;
       display: flex;
       flex-direction: column;
-      flex: 1;
     }
     #root > div {
       flex: 1;

@@ -71,7 +71,7 @@ export default function AttractionDetailScreen({ route, navigation }) {
 
   return (
     <ScrollView 
-      style={[styles.container, Platform.OS === 'web' && { height: '100vh' }]} 
+      style={styles.container} 
       contentContainerStyle={{ flexGrow: 1, paddingBottom: 120 }}
       showsVerticalScrollIndicator={true}
     >

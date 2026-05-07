@@ -89,7 +89,7 @@ export default function HomeScreen({ navigation }) {
 
   return (
     <ScrollView
-        style={[styles.container, Platform.OS === 'web' && { height: '100vh' }]}
+        style={styles.container}
       contentContainerStyle={{ flexGrow: 1, paddingBottom: 120 }}
       showsVerticalScrollIndicator={false}
       refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor="#fff" />}

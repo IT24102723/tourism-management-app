@@ -92,7 +92,7 @@ export default function FeedbackScreen({ route, navigation }) {
 
   return (
     <ScrollView
-        style={[styles.container, Platform.OS === 'web' && { height: '100vh' }]} contentContainerStyle={{ paddingBottom: 40 }} showsVerticalScrollIndicator={true}>
+        style={styles.container} contentContainerStyle={{ paddingBottom: 40 }} showsVerticalScrollIndicator={true}>
       <StatusBar barStyle="light-content" />
       <LinearGradient colors={['#0D5F8A', '#2E86AB']} style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backBtn}>

@@ -63,7 +63,7 @@ export default function PaymentScreen({ route, navigation }) {
 
   return (
     <ScrollView
-        style={[styles.container, Platform.OS === 'web' && { height: '100vh' }]} contentContainerStyle={{ flexGrow: 1, paddingBottom: 120 }} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={true}>
+        style={styles.container} contentContainerStyle={{ flexGrow: 1, paddingBottom: 120 }} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={true}>
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backBtn}>

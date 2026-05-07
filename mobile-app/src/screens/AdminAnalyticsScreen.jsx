@@ -36,7 +36,7 @@ export default function AdminAnalyticsScreen() {
 
   return (
     <ScrollView
-        style={[styles.container, Platform.OS === 'web' && { height: '100vh' }]} contentContainerStyle={{ paddingBottom: 40 }} showsVerticalScrollIndicator={true}>
+        style={styles.container} contentContainerStyle={{ paddingBottom: 40 }} showsVerticalScrollIndicator={true}>
       <View style={styles.header}>
         <Text style={styles.headerTitle}>📊 Business Analytics</Text>
         <Text style={styles.headerSub}>Tourism Content & Performance Report</Text>

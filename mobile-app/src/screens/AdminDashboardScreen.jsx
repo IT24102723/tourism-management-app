@@ -75,7 +75,7 @@ export default function AdminDashboardScreen({ navigation }) {
 
   return (
     <ScrollView
-        style={[styles.container, Platform.OS === 'web' && { height: '100vh' }]} contentContainerStyle={{ flexGrow: 1, paddingBottom: 100 }} showsVerticalScrollIndicator={true}>
+        style={styles.container} contentContainerStyle={{ flexGrow: 1, paddingBottom: 100 }} showsVerticalScrollIndicator={true}>
       <View style={styles.header}>
         <View style={styles.headerRow}>
           <View>

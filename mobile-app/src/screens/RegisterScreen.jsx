@@ -40,7 +40,7 @@ export default function RegisterScreen({ navigation }) {
 
   return (
     <ScrollView
-        style={[styles.container, Platform.OS === 'web' && { height: '100vh' }]} contentContainerStyle={{ paddingBottom: 50 }} keyboardShouldPersistTaps="handled">
+        style={styles.container} contentContainerStyle={{ paddingBottom: 50 }} keyboardShouldPersistTaps="handled">
       {/* Hero top */}
       <View style={styles.hero}>
         <TouchableOpacity onPress={() => navigation.navigate('Login')} style={styles.backBtn}>

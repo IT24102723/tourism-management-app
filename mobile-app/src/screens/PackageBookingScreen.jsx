@@ -86,7 +86,7 @@ export default function PackageBookingScreen({ route, navigation }) {
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
       <ScrollView
-        style={[styles.container, Platform.OS === 'web' && { height: '100vh' }]} 
+        style={styles.container} 
         contentContainerStyle={{ flexGrow: 1, paddingBottom: 120 }} 
         keyboardShouldPersistTaps="handled" 
         showsVerticalScrollIndicator={true}
