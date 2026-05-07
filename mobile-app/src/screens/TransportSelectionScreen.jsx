@@ -128,7 +128,7 @@ export default function TransportSelectionScreen({ route, navigation }) {
         <Text style={styles.headerSub}>Choose a vehicle and route, or skip</Text>
       </View>
 
-      <ScrollView contentContainerStyle={{ paddingBottom: 120 }}>
+      <ScrollView contentContainerStyle={{ flexGrow: 1, paddingBottom: 150 }} keyboardShouldPersistTaps="handled">
         {/* Booking recap */}
         <View style={styles.recap}>
           <Text style={styles.recapTitle}>{package_title}</Text>

@@ -190,7 +190,7 @@ export default function TransportScreen({ navigation }) {
           data={activeTab === 'vehicles' ? vehicles : schedules}
           keyExtractor={(item, idx) => activeTab === 'vehicles' ? `v-${item.vehicle_id || idx}` : `s-${item.schedule_id || idx}`}
           renderItem={activeTab === 'vehicles' ? renderVehicleCard : renderScheduleCard}
-          contentContainerStyle={{ paddingBottom: 20 }}
+          contentContainerStyle={{ flexGrow: 1, paddingBottom: 100 }}
           ListEmptyComponent={
             <Text style={styles.emptyText}>
               {activeTab === 'vehicles' ? 'No vehicles available' : 'No schedules yet'}

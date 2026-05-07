@@ -83,7 +83,8 @@ export default function PackageBookingScreen({ route, navigation }) {
       style={{ flex: 1 }}
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
-      <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: 50 }}>
+      <ScrollView style={styles.container} contentContainerStyle={{ flexGrow: 1, paddingBottom: 80 }} keyboardShouldPersistTaps="handled" keyboardDismissMode="on-drag" nestedScrollEnabled={true}>
+
         {/* Header */}
         <View style={styles.header}>
           <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backBtn}>

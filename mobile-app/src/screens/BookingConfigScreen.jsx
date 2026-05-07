@@ -70,7 +70,7 @@ export default function BookingConfigScreen({ route, navigation }) {
         <Text style={styles.headerSub}>Choose a travel plan or skip for default</Text>
       </View>
 
-      <ScrollView contentContainerStyle={{ padding: 20, paddingBottom: 120 }}>
+      <ScrollView contentContainerStyle={{ flexGrow: 1, padding: 20, paddingBottom: 150 }} keyboardShouldPersistTaps="handled">
         <Text style={styles.sectionTitle}>Available Schedules</Text>
         {schedules.length === 0 ? (
           <View style={styles.emptyBox}>

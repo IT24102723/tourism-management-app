@@ -28,7 +28,11 @@ export default function PackagesScreen({ navigation }) {
     setRefreshing(false);
   };
 
-  const filtered = filter === 'All' ? packages : packages.filter(p => p.package_type === filter);
+  // Filter packages robustly, handling missing or mismatched type fields
+  const filtered = filter === 'All' ? packages : packages.filter(p => {
+    const type = (p.package_type || p.type || '').toString();
+    return type === filter;
+  });
 
   const renderPackageCard = ({ item }) => (
     <TouchableOpacity 
@@ -92,8 +96,8 @@ export default function PackagesScreen({ navigation }) {
         {loading ? <ActivityIndicator size="large" color="#0D5F8A" style={{ marginTop: 50 }} /> : (
           <FlatList 
             data={filtered} 
-            keyExtractor={item => String(item.package_id)}
-            contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: 100 }}
+            keyExtractor={item => String(item.package_id || item.id || Math.random())}
+            contentContainerStyle={{ flexGrow: 1, paddingHorizontal: 20, paddingBottom: 100 }}
             renderItem={renderPackageCard}
             refreshing={refreshing}
             onRefresh={fetchPackages}

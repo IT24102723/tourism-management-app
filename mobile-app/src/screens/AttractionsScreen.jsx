@@ -120,7 +120,7 @@ export default function AttractionsScreen({ navigation }) {
           <FlatList 
             data={filtered} 
             keyExtractor={item => String(item.attraction_id)}
-            contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: 100 }}
+            contentContainerStyle={{ flexGrow: 1, paddingHorizontal: 20, paddingBottom: 100 }}
             renderItem={renderAttractionCard}
             refreshing={refreshing}
             onRefresh={fetchAttractions}
