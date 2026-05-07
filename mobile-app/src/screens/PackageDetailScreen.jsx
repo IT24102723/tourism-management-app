@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useContext } from 'react';
 import {
   View, Text, StyleSheet, ActivityIndicator, ScrollView,
-  TouchableOpacity, Image, LinearGradient,
+  TouchableOpacity, Image,
 } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 import API from '../services/api';
 import { getPrimaryImage } from '../utils/imageUtils';
 import { AuthContext } from '../context/AuthContext';
