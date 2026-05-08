@@ -70,132 +70,134 @@ export default function AttractionDetailScreen({ route, navigation }) {
   };
 
   return (
-    <ScrollView 
-      style={styles.container} 
-      contentContainerStyle={{ flexGrow: 1, paddingBottom: 120 }}
-      showsVerticalScrollIndicator={true}
-    >
-      {/* Header Image */}
-      <View style={styles.imageContainer}>
-        <Image
-          source={{ uri: getPrimaryImage(attraction) || `https://picsum.photos/seed/attraction${id}/600/300` }}
-          style={styles.headerImage}
-        />
-        <TouchableOpacity 
-          style={styles.backButton}
-          onPress={() => navigation.goBack()}
-        >
-          <Text style={styles.backButtonText}>←</Text>
-        </TouchableOpacity>
-        
-        {/* Status and Rating Badges */}
-        <View style={styles.badgesContainer}>
-          <View style={[styles.statusBadge, { backgroundColor: statusColor[attraction.operational_status] }]}>
-            <Text style={styles.badgeText}>{attraction.operational_status}</Text>
-          </View>
-          {attraction.average_rating > 0 && (
-            <View style={styles.ratingBadge}>
-              <Text style={styles.badgeText}>⭐ {attraction.average_rating.toFixed(1)}</Text>
-            </View>
-          )}
-        </View>
-      </View>
-
-      {/* Content */}
-      <View style={styles.content}>
-        {/* Title Section */}
-        <Text style={styles.title}>{attraction.name}</Text>
-        
-        <View style={styles.metaRow}>
-          <Text style={styles.category}>{attraction.category}</Text>
-          <Text style={styles.divider}>•</Text>
-          <Text style={styles.city}>{attraction.city}</Text>
-        </View>
-
-        {/* Info Cards */}
-        <View style={styles.infoGrid}>
-          {attraction.entrance_fee > 0 && (
-            <View style={styles.infoCard}>
-              <Text style={styles.infoIcon}>💰</Text>
-              <Text style={styles.infoLabel}>Entry Fee</Text>
-              <Text style={styles.infoValue}>LKR {attraction.entrance_fee}</Text>
-            </View>
-          )}
-          {attraction.opening_hours && (
-            <View style={styles.infoCard}>
-              <Text style={styles.infoIcon}>🕐</Text>
-              <Text style={styles.infoLabel}>Hours</Text>
-              <Text style={styles.infoValue} numberOfLines={1}>{attraction.opening_hours}</Text>
-            </View>
-          )}
-          {attraction.rating_count > 0 && (
-            <View style={styles.infoCard}>
-              <Text style={styles.infoIcon}>👥</Text>
-              <Text style={styles.infoLabel}>Reviews</Text>
-              <Text style={styles.infoValue}>{attraction.rating_count}</Text>
-            </View>
-          )}
-        </View>
-
-        {/* About Section */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>About this Destination</Text>
-          <View style={styles.descCard}>
-            <Text style={styles.description}>
-              {attraction.description || 'No description available for this attraction.'}
-            </Text>
-          </View>
-        </View>
-
-        {/* Facilities Section */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Facilities & Amenities</Text>
-          <View style={styles.facilitiesGrid}>
-            <View style={styles.facilityItem}><Text style={styles.facilityEmoji}>🚗</Text><Text style={styles.facilityText}>Parking</Text></View>
-            <View style={styles.facilityItem}><Text style={styles.facilityEmoji}>📷</Text><Text style={styles.facilityText}>Photos</Text></View>
-            <View style={styles.facilityItem}><Text style={styles.facilityEmoji}>🚻</Text><Text style={styles.facilityText}>Restrooms</Text></View>
-            <View style={styles.facilityItem}><Text style={styles.facilityEmoji}>☕</Text><Text style={styles.facilityText}>Cafe</Text></View>
-          </View>
-        </View>
-
-        {/* Reviews Section */}
-        {feedbackSummary && feedbackSummary.recent_reviews?.length > 0 && (
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Recent Reviews ({feedbackSummary.summary?.total_reviews || 0})</Text>
-            {feedbackSummary.recent_reviews.map((review, idx) => (
-              <View key={review.feedback_id || idx} style={styles.reviewCard}>
-                <View style={styles.reviewHeader}>
-                  <Text style={styles.reviewUser}>👤 {review.username || review.full_name || 'Tourist'}</Text>
-                  <Text style={styles.reviewRating}>{'★'.repeat(review.rating || 0)}</Text>
-                </View>
-                <Text style={styles.reviewText}>{review.review_text || review.comment}</Text>
-                <Text style={styles.reviewDate}>{new Date(review.created_at).toLocaleDateString()}</Text>
-                
-                {review.admin_response && (
-                  <View style={styles.adminResponseContainer}>
-                    <Text style={styles.adminResponseTitle}>💬 Response from Management</Text>
-                    <Text style={styles.adminResponseText}>{review.admin_response}</Text>
-                    {review.response_date && (
-                      <Text style={styles.adminResponseDate}>{new Date(review.response_date).toLocaleDateString()}</Text>
-                    )}
-                  </View>
-                )}
-              </View>
-            ))}
-          </View>
-        )}
-
-        {/* Action Buttons */}
-        <View style={styles.buttonContainer}>
+    <View style={StyleSheet.absoluteFill}>
+      <ScrollView 
+        style={styles.container} 
+        contentContainerStyle={{ flexGrow: 1, paddingBottom: 120 }}
+        showsVerticalScrollIndicator={true}
+      >
+        {/* Header Image */}
+        <View style={styles.imageContainer}>
+          <Image
+            source={{ uri: getPrimaryImage(attraction) || `https://picsum.photos/seed/attraction${id}/600/300` }}
+            style={styles.headerImage}
+          />
           <TouchableOpacity 
-            style={[styles.button, styles.secondaryButton]}
-            onPress={() => navigation.navigate('Feedback', { target_type: 'Attraction', target_id: id })}
+            style={styles.backButton}
+            onPress={() => navigation.goBack()}
           >
-            <Text style={styles.secondaryButtonText}>💬 Leave Feedback</Text>
+            <Text style={styles.backButtonText}>←</Text>
           </TouchableOpacity>
+          
+          {/* Status and Rating Badges */}
+          <View style={styles.badgesContainer}>
+            <View style={[styles.statusBadge, { backgroundColor: statusColor[attraction.operational_status] }]}>
+              <Text style={styles.badgeText}>{attraction.operational_status}</Text>
+            </View>
+            {attraction.average_rating > 0 && (
+              <View style={styles.ratingBadge}>
+                <Text style={styles.badgeText}>⭐ {attraction.average_rating.toFixed(1)}</Text>
+              </View>
+            )}
+          </View>
         </View>
-      </View>
-    </ScrollView>
+
+        {/* Content */}
+        <View style={styles.content}>
+          {/* Title Section */}
+          <Text style={styles.title}>{attraction.name}</Text>
+          
+          <View style={styles.metaRow}>
+            <Text style={styles.category}>{attraction.category}</Text>
+            <Text style={styles.divider}>•</Text>
+            <Text style={styles.city}>{attraction.city}</Text>
+          </View>
+
+          {/* Info Cards */}
+          <View style={styles.infoGrid}>
+            {attraction.entrance_fee > 0 && (
+              <View style={styles.infoCard}>
+                <Text style={styles.infoIcon}>💰</Text>
+                <Text style={styles.infoLabel}>Entry Fee</Text>
+                <Text style={styles.infoValue}>LKR {attraction.entrance_fee}</Text>
+              </View>
+            )}
+            {attraction.opening_hours && (
+              <View style={styles.infoCard}>
+                <Text style={styles.infoIcon}>🕐</Text>
+                <Text style={styles.infoLabel}>Hours</Text>
+                <Text style={styles.infoValue} numberOfLines={1}>{attraction.opening_hours}</Text>
+              </View>
+            )}
+            {attraction.rating_count > 0 && (
+              <View style={styles.infoCard}>
+                <Text style={styles.infoIcon}>👥</Text>
+                <Text style={styles.infoLabel}>Reviews</Text>
+                <Text style={styles.infoValue}>{attraction.rating_count}</Text>
+              </View>
+            )}
+          </View>
+
+          {/* About Section */}
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>About this Destination</Text>
+            <View style={styles.descCard}>
+              <Text style={styles.description}>
+                {attraction.description || 'No description available for this attraction.'}
+              </Text>
+            </View>
+          </View>
+
+          {/* Facilities Section */}
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Facilities & Amenities</Text>
+            <View style={styles.facilitiesGrid}>
+              <View style={styles.facilityItem}><Text style={styles.facilityEmoji}>🚗</Text><Text style={styles.facilityText}>Parking</Text></View>
+              <View style={styles.facilityItem}><Text style={styles.facilityEmoji}>📷</Text><Text style={styles.facilityText}>Photos</Text></View>
+              <View style={styles.facilityItem}><Text style={styles.facilityEmoji}>🚻</Text><Text style={styles.facilityText}>Restrooms</Text></View>
+              <View style={styles.facilityItem}><Text style={styles.facilityEmoji}>☕</Text><Text style={styles.facilityText}>Cafe</Text></View>
+            </View>
+          </View>
+
+          {/* Reviews Section */}
+          {feedbackSummary && feedbackSummary.recent_reviews?.length > 0 && (
+            <View style={styles.section}>
+              <Text style={styles.sectionTitle}>Recent Reviews ({feedbackSummary.summary?.total_reviews || 0})</Text>
+              {feedbackSummary.recent_reviews.map((review, idx) => (
+                <View key={review.feedback_id || idx} style={styles.reviewCard}>
+                  <View style={styles.reviewHeader}>
+                    <Text style={styles.reviewUser}>👤 {review.username || review.full_name || 'Tourist'}</Text>
+                    <Text style={styles.reviewRating}>{'★'.repeat(review.rating || 0)}</Text>
+                  </View>
+                  <Text style={styles.reviewText}>{review.review_text || review.comment}</Text>
+                  <Text style={styles.reviewDate}>{new Date(review.created_at).toLocaleDateString()}</Text>
+                  
+                  {review.admin_response && (
+                    <View style={styles.adminResponseContainer}>
+                      <Text style={styles.adminResponseTitle}>💬 Response from Management</Text>
+                      <Text style={styles.adminResponseText}>{review.admin_response}</Text>
+                      {review.response_date && (
+                        <Text style={styles.adminResponseDate}>{new Date(review.response_date).toLocaleDateString()}</Text>
+                      )}
+                    </View>
+                  )}
+                </View>
+              ))}
+            </View>
+          )}
+
+          {/* Action Buttons */}
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity 
+              style={[styles.button, styles.secondaryButton]}
+              onPress={() => navigation.navigate('Feedback', { target_type: 'Attraction', target_id: id })}
+            >
+              <Text style={styles.secondaryButtonText}>💬 Leave Feedback</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </ScrollView>
+    </View>
   );
 }
 

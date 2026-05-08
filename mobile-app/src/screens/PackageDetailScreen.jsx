@@ -56,7 +56,7 @@ export default function PackageDetailScreen({ route, navigation }) {
   const typeColor = TYPE_COLORS[pkg.package_type] || '#0D5F8A';
 
   return (
-    <View style={[styles.outerContainer, { flex: 1 }]}>
+    <View style={[styles.outerContainer, StyleSheet.absoluteFill]}>
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.scrollContent}
