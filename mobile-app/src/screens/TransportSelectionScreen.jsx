@@ -119,7 +119,7 @@ export default function TransportSelectionScreen({ route, navigation }) {
   const totalIfBooked = safeBaseAmount + transportEstimate;
 
   return (
-    <View style={Platform.OS === 'web' ? { height: webHeight, overflow: 'hidden', backgroundColor: '#F5F7FA' } : styles.container}>
+    <View style={[styles.container, StyleSheet.absoluteFill]}>
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backBtn}>

@@ -96,8 +96,9 @@ export default function BookingDetailScreen({ route, navigation }) {
   const statusBg    = STATUS_BG[booking.booking_status]    || '#F5F5F5';
 
   return (
-    <ScrollView
-        style={styles.container} contentContainerStyle={{ flexGrow: 1, paddingBottom: 120 }} showsVerticalScrollIndicator={true}>
+    <View style={StyleSheet.absoluteFill}>
+      <ScrollView
+          style={styles.container} contentContainerStyle={{ flexGrow: 1, paddingBottom: 120 }} showsVerticalScrollIndicator={true}>
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backBtn}>
@@ -260,7 +261,7 @@ export default function BookingDetailScreen({ route, navigation }) {
         </View>
       )}
       </ScrollView>
-    
+    </View>
   );
 }
 

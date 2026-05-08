@@ -81,10 +81,11 @@ export default function PackageBookingScreen({ route, navigation }) {
   };
 
   return (
-    <KeyboardAvoidingView
-      style={{ flex: 1 }}
-      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-    >
+    <View style={StyleSheet.absoluteFill}>
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      >
       <ScrollView
         style={styles.container} 
         contentContainerStyle={{ flexGrow: 1, paddingBottom: 120 }} 
@@ -281,6 +282,7 @@ export default function PackageBookingScreen({ route, navigation }) {
         </TouchableOpacity>
       </ScrollView>
     </KeyboardAvoidingView>
+    </View>
   );
 }
 

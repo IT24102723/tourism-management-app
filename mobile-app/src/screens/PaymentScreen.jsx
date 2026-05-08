@@ -62,8 +62,9 @@ export default function PaymentScreen({ route, navigation }) {
   };
 
   return (
-    <ScrollView
-        style={styles.container} contentContainerStyle={{ flexGrow: 1, paddingBottom: 120 }} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={true}>
+    <View style={StyleSheet.absoluteFill}>
+      <ScrollView
+          style={styles.container} contentContainerStyle={{ flexGrow: 1, paddingBottom: 120 }} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={true}>
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backBtn}>
@@ -240,7 +241,7 @@ export default function PaymentScreen({ route, navigation }) {
 
       <View style={{ height: 40 }} />
       </ScrollView>
-    
+    </View>
   );
 }
 

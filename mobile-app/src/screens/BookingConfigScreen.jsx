@@ -62,7 +62,7 @@ export default function BookingConfigScreen({ route, navigation }) {
   );
 
   return (
-    <View style={Platform.OS === 'web' ? { height: webHeight, overflow: 'hidden', backgroundColor: '#F5F7FA' } : styles.container}>
+    <View style={[styles.container, StyleSheet.absoluteFill]}>
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backBtn}>
           <Text style={styles.backText}>← Back</Text>
