@@ -195,8 +195,7 @@ export default function FeedbackScreen({ route, navigation }) {
           )}
         </TouchableOpacity>
       </View>
-      </View>
-      </ScrollView>
+    </ScrollView>
     
   );
 }
