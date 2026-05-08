@@ -25,6 +25,7 @@ import MyFeedbackScreen from '../screens/MyFeedbackScreen';
 import InquiryScreen from '../screens/InquiryScreen';
 import ProvidersScreen from '../screens/ProvidersScreen';
 import ProviderDetailScreen from '../screens/ProviderDetailScreen';
+import WelcomeScreen from '../screens/WelcomeScreen';
 
 // Admin Screens
 import AdminDashboardScreen from '../screens/AdminDashboardScreen';
@@ -130,6 +131,7 @@ export default function AppNavigator() {
                     )
                 ) : (
                     <>
+                        <Stack.Screen name="Welcome" component={WelcomeScreen} />
                         <Stack.Screen name="Login" component={LoginScreen} />
                         <Stack.Screen name="Register" component={RegisterScreen} />
                     </>
