@@ -88,8 +88,9 @@ export default function HomeScreen({ navigation }) {
   const greeting = user?.full_name?.split(' ')[0] || user?.username || 'Traveler';
 
   return (
-    <ScrollView
-        style={styles.container}
+    <View style={StyleSheet.absoluteFill}>
+      <ScrollView
+          style={styles.container}
       contentContainerStyle={{ flexGrow: 1, paddingBottom: 120 }}
       showsVerticalScrollIndicator={false}
       refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor="#fff" />}
@@ -255,6 +256,7 @@ export default function HomeScreen({ navigation }) {
         <Text style={styles.footerSub}>"So Sri Lanka" · Official App</Text>
       </View>
     </ScrollView>
+    </View>
   );
 }
 

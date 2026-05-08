@@ -76,7 +76,8 @@ export default function AttractionsScreen({ navigation }) {
   );
 
   return (
-    <View style={styles.container}>
+    <View style={StyleSheet.absoluteFill}>
+      <View style={styles.container}>
       <StatusBar barStyle="light-content" />
       <LinearGradient colors={['#0D5F8A', '#2E86AB']} style={styles.header}>
         <View style={styles.headerRow}>
@@ -128,6 +129,7 @@ export default function AttractionsScreen({ navigation }) {
           />
         )}
       </View>
+    </View>
     </View>
   );
 }
