@@ -2,7 +2,7 @@ import { AuthProvider } from './src/context/AuthContext';
 import AppNavigator from './src/navigation/AppNavigator';
 import { Platform } from 'react-native';
 
-if (Platform.OS === 'web') {
+if (Platform.OS === 'web' && typeof document !== 'undefined') {
   // Inject global styles to ensure the root web container behaves like a mobile screen
   const style = document.createElement('style');
   style.textContent = `
