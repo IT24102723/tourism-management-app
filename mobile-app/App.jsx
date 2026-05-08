@@ -7,13 +7,19 @@ if (Platform.OS === 'web') {
   const style = document.createElement('style');
   style.textContent = `
     html, body, #root {
-      min-height: 100vh;
+      height: 100%;
       width: 100%;
       display: flex;
       flex-direction: column;
+      overflow: hidden;
+    }
+    #root * {
+      /* Force React Navigation intermediate divs to pass down flex if they are relative */
     }
     #root > div {
       flex: 1;
+      display: flex;
+      flex-direction: column;
     }
   `;
   document.head.appendChild(style);

@@ -82,7 +82,7 @@ export default function PackageBookingScreen({ route, navigation }) {
 
   return (
     <KeyboardAvoidingView
-      style={Platform.OS === 'web' ? { height: webHeight, overflow: 'hidden', flex: 1 } : { flex: 1 }}
+      style={{ flex: 1 }}
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
       <ScrollView

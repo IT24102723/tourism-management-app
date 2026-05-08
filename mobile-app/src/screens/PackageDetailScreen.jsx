@@ -55,13 +55,8 @@ export default function PackageDetailScreen({ route, navigation }) {
   const heroUri   = getPrimaryImage(pkg) || HERO_IMAGES[pkg.package_type] || HERO_IMAGES.default;
   const typeColor = TYPE_COLORS[pkg.package_type] || '#0D5F8A';
 
-  // On web: use window height so ScrollView has a bounded container to scroll inside
-  const containerStyle = Platform.OS === 'web'
-    ? { height: typeof window !== 'undefined' ? window.innerHeight : SCREEN_HEIGHT, overflow: 'hidden' }
-    : { flex: 1 };
-
   return (
-    <View style={[styles.outerContainer, containerStyle]}>
+    <View style={[styles.outerContainer, { flex: 1 }]}>
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.scrollContent}
